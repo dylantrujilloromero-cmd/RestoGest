@@ -1,0 +1,223 @@
+<mxfile host="app.diagrams.net" agent="Claude">
+  <diagram name="Modelo Logico" id="Modelo_Logico">
+    <mxGraphModel dx="2357" dy="1295" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="1650" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="lg_rest" parent="1" style="swimlane;html=1;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=0;resizeParentMax=0;marginBottom=0;whiteSpace=wrap;fontColor=#1a1a1a;" value="RESTAURANTES" vertex="1">
+          <mxGeometry height="420" width="260" x="460" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_rest_id" parent="lg_rest" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="🔑 id : uuid" vertex="1">
+          <mxGeometry height="26" width="260" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_rest_nombre" parent="lg_rest" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    nombre : varchar(120)" vertex="1">
+          <mxGeometry height="26" width="260" y="56" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_rest_slug" parent="lg_rest" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    slug : varchar(120) [UQ]" vertex="1">
+          <mxGeometry height="26" width="260" y="82" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_rest_descripcion" parent="lg_rest" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    descripcion : text" vertex="1">
+          <mxGeometry height="26" width="260" y="108" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_rest_direccion" parent="lg_rest" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    direccion : varchar(255)" vertex="1">
+          <mxGeometry height="26" width="260" y="134" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_rest_telefono" parent="lg_rest" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    telefono : varchar(40)" vertex="1">
+          <mxGeometry height="26" width="260" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_rest_email" parent="lg_rest" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    email : varchar(120)" vertex="1">
+          <mxGeometry height="26" width="260" y="186" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_rest_imagen_url" parent="lg_rest" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    imagen_url : text" vertex="1">
+          <mxGeometry height="26" width="260" y="212" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_rest_hora_apertura" parent="lg_rest" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    hora_apertura : time" vertex="1">
+          <mxGeometry height="26" width="260" y="238" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_rest_hora_cierre" parent="lg_rest" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    hora_cierre : time" vertex="1">
+          <mxGeometry height="26" width="260" y="264" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_rest_intervalo_reserva_min" parent="lg_rest" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    intervalo_reserva_min : integer" vertex="1">
+          <mxGeometry height="26" width="260" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_rest_capacidad_maxima" parent="lg_rest" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    capacidad_maxima : integer" vertex="1">
+          <mxGeometry height="26" width="260" y="316" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_rest_activo" parent="lg_rest" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    activo : boolean" vertex="1">
+          <mxGeometry height="26" width="260" y="342" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_rest_created_at" parent="lg_rest" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    created_at : timestamptz" vertex="1">
+          <mxGeometry height="26" width="260" y="368" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_rest_updated_at" parent="lg_rest" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    updated_at : timestamptz" vertex="1">
+          <mxGeometry height="26" width="260" y="394" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_usr" parent="1" style="swimlane;html=1;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=0;resizeParentMax=0;marginBottom=0;whiteSpace=wrap;fontColor=#1a1a1a;" value="USUARIOS" vertex="1">
+          <mxGeometry height="290" width="260" x="60" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_usr_id" parent="lg_usr" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="🔑 id : uuid" vertex="1">
+          <mxGeometry height="26" width="260" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_usr_restaurante_id" parent="lg_usr" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="↪ restaurante_id : uuid" vertex="1">
+          <mxGeometry height="26" width="260" y="56" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_usr_nombre_completo" parent="lg_usr" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    nombre_completo : varchar(150)" vertex="1">
+          <mxGeometry height="26" width="260" y="82" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_usr_email" parent="lg_usr" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    email : varchar(150) [UQ]" vertex="1">
+          <mxGeometry height="26" width="260" y="108" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_usr_password_hash" parent="lg_usr" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    password_hash : varchar(255)" vertex="1">
+          <mxGeometry height="26" width="260" y="134" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_usr_rol" parent="lg_usr" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    rol : rol_usuario (enum)" vertex="1">
+          <mxGeometry height="26" width="260" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_usr_telefono" parent="lg_usr" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    telefono : varchar(40)" vertex="1">
+          <mxGeometry height="26" width="260" y="186" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_usr_activo" parent="lg_usr" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    activo : boolean" vertex="1">
+          <mxGeometry height="26" width="260" y="212" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_usr_created_at" parent="lg_usr" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    created_at : timestamptz" vertex="1">
+          <mxGeometry height="26" width="260" y="238" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_usr_updated_at" parent="lg_usr" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    updated_at : timestamptz" vertex="1">
+          <mxGeometry height="26" width="260" y="264" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_plan" parent="1" style="swimlane;html=1;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=0;resizeParentMax=0;marginBottom=0;whiteSpace=wrap;fontColor=#1a1a1a;" value="PLANES_RESERVA" vertex="1">
+          <mxGeometry height="264" width="260" x="950" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_plan_id" parent="lg_plan" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="🔑 id : uuid" vertex="1">
+          <mxGeometry height="26" width="260" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_plan_restaurante_id" parent="lg_plan" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="↪ restaurante_id : uuid" vertex="1">
+          <mxGeometry height="26" width="260" y="56" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_plan_nombre" parent="lg_plan" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    nombre : varchar(100)" vertex="1">
+          <mxGeometry height="26" width="260" y="82" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_plan_descripcion" parent="lg_plan" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    descripcion : text" vertex="1">
+          <mxGeometry height="26" width="260" y="108" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_plan_duracion_estimada_min" parent="lg_plan" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    duracion_estimada_min : integer" vertex="1">
+          <mxGeometry height="26" width="260" y="134" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_plan_incluye_postre_default" parent="lg_plan" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    incluye_postre_default : boolean" vertex="1">
+          <mxGeometry height="26" width="260" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_plan_activo" parent="lg_plan" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    activo : boolean" vertex="1">
+          <mxGeometry height="26" width="260" y="186" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_plan_created_at" parent="lg_plan" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    created_at : timestamptz" vertex="1">
+          <mxGeometry height="26" width="260" y="212" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_plan_updated_at" parent="lg_plan" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    updated_at : timestamptz" vertex="1">
+          <mxGeometry height="26" width="260" y="238" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_res" parent="1" style="swimlane;html=1;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=0;resizeParentMax=0;marginBottom=0;whiteSpace=wrap;fontColor=#1a1a1a;" value="RESERVAS" vertex="1">
+          <mxGeometry height="472" width="300" x="470" y="740" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_res_id" parent="lg_res" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="🔑 id : uuid" vertex="1">
+          <mxGeometry height="26" width="300" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_res_restaurante_id" parent="lg_res" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="↪ restaurante_id : uuid" vertex="1">
+          <mxGeometry height="26" width="300" y="56" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_res_plan_id" parent="lg_res" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="↪ plan_id : uuid" vertex="1">
+          <mxGeometry height="26" width="300" y="82" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_res_creado_por_usuario_id" parent="lg_res" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="↪ creado_por_usuario_id : uuid" vertex="1">
+          <mxGeometry height="26" width="300" y="108" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_res_ultimo_editor_usuario_id" parent="lg_res" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="↪ ultimo_editor_usuario_id : uuid" vertex="1">
+          <mxGeometry height="26" width="300" y="134" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_res_fecha" parent="lg_res" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    fecha : date" vertex="1">
+          <mxGeometry height="26" width="300" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_res_hora" parent="lg_res" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    hora : time" vertex="1">
+          <mxGeometry height="26" width="300" y="186" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_res_numero_personas" parent="lg_res" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    numero_personas : integer" vertex="1">
+          <mxGeometry height="26" width="300" y="212" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_res_nombre_cliente" parent="lg_res" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    nombre_cliente : varchar(150)" vertex="1">
+          <mxGeometry height="26" width="300" y="238" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_res_telefono_contacto" parent="lg_res" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    telefono_contacto : varchar(40)" vertex="1">
+          <mxGeometry height="26" width="300" y="264" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_res_email_contacto" parent="lg_res" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    email_contacto : varchar(150)" vertex="1">
+          <mxGeometry height="26" width="300" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_res_ocasion" parent="lg_res" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    ocasion : tipo_ocasion (enum)" vertex="1">
+          <mxGeometry height="26" width="300" y="316" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_res_descripcion_notas" parent="lg_res" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    descripcion_notas : text" vertex="1">
+          <mxGeometry height="26" width="300" y="342" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_res_postre_incluido" parent="lg_res" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    postre_incluido : boolean" vertex="1">
+          <mxGeometry height="26" width="300" y="368" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_res_estado" parent="lg_res" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    estado : estado_reserva (enum)" vertex="1">
+          <mxGeometry height="26" width="300" y="394" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_res_created_at" parent="lg_res" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    created_at : timestamptz" vertex="1">
+          <mxGeometry height="26" width="300" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_res_updated_at" parent="lg_res" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    updated_at : timestamptz" vertex="1">
+          <mxGeometry height="26" width="300" y="446" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_hist" parent="1" style="swimlane;html=1;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=13;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;horizontalStack=0;resizeParent=0;resizeParentMax=0;marginBottom=0;whiteSpace=wrap;fontColor=#1a1a1a;" value="HISTORIAL_EDICIONES_RESERVAS" vertex="1">
+          <mxGeometry height="186" width="300" x="200" y="1300" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_hist_id" parent="lg_hist" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="🔑 id : uuid" vertex="1">
+          <mxGeometry height="26" width="300" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_hist_reserva_id" parent="lg_hist" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="↪ reserva_id : uuid" vertex="1">
+          <mxGeometry height="26" width="300" y="56" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_hist_usuario_id" parent="lg_hist" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="↪ usuario_id : uuid" vertex="1">
+          <mxGeometry height="26" width="300" y="82" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_hist_accion" parent="lg_hist" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    accion : varchar(50)" vertex="1">
+          <mxGeometry height="26" width="300" y="108" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_hist_detalles_cambio" parent="lg_hist" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    detalles_cambio : jsonb" vertex="1">
+          <mxGeometry height="26" width="300" y="134" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_hist_created_at" parent="lg_hist" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=10;spacingRight=4;overflow=hidden;portConstraint=eastwest;rotatable=0;points=[[0,0.5],[1,0.5]];whiteSpace=wrap;fontSize=12;html=1;" value="    created_at : timestamptz" vertex="1">
+          <mxGeometry height="26" width="300" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_e1" edge="1" parent="1" source="lg_rest_id" style="edgeStyle=entityRelationEdgeStyle;rounded=0;html=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;jettySize=auto;orthogonalLoop=1;strokeColor=#666666;fontSize=11;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="lg_usr" value="1        N">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="190" y="396" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lg_e2" edge="1" parent="1" source="lg_rest_id" style="edgeStyle=entityRelationEdgeStyle;rounded=0;html=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;jettySize=auto;orthogonalLoop=1;strokeColor=#666666;fontSize=11;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=-0.004;entryY=-0.077;entryDx=0;entryDy=0;entryPerimeter=0;" target="lg_plan_id" value="1        N">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1060" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lg_e3" edge="1" parent="1" source="lg_rest_updated_at" style="edgeStyle=entityRelationEdgeStyle;rounded=0;html=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;jettySize=auto;orthogonalLoop=1;strokeColor=#666666;fontSize=11;exitX=0.388;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitPerimeter=0;" target="lg_res" value="1        N">
+          <mxGeometry relative="1" x="-0.0276" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lg_e4" edge="1" parent="1" source="lg_plan_descripcion" style="edgeStyle=entityRelationEdgeStyle;rounded=0;html=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;jettySize=auto;orthogonalLoop=1;strokeColor=#666666;fontSize=11;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.3;entryDx=0;entryDy=0;" target="lg_res_plan_id" value="1        N">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_e5" edge="1" parent="1" source="lg_usr_id" style="edgeStyle=entityRelationEdgeStyle;rounded=0;html=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;jettySize=auto;orthogonalLoop=1;strokeColor=#666666;fontSize=11;exitX=1;exitY=0.55;exitDx=0;exitDy=0;entryX=0;entryY=0.45;entryDx=0;entryDy=0;" target="lg_res_creado_por_usuario_id" value="1        N">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_e7" edge="1" parent="1" source="lg_res_updated_at" style="edgeStyle=entityRelationEdgeStyle;rounded=0;html=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;jettySize=auto;orthogonalLoop=1;strokeColor=#666666;fontSize=11;exitX=0.013;exitY=0.962;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitPerimeter=0;" target="lg_hist" value="1        N">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lg_e8" edge="1" parent="1" source="lg_usr_updated_at" style="edgeStyle=entityRelationEdgeStyle;rounded=0;html=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;jettySize=auto;orthogonalLoop=1;strokeColor=#666666;fontSize=11;exitX=0.485;exitY=1.115;exitDx=0;exitDy=0;entryX=0;entryY=0.6;entryDx=0;entryDy=0;exitPerimeter=0;" target="lg_hist_usuario_id" value="1        N">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
