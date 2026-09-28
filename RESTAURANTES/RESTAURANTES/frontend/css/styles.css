@@ -1,0 +1,1464 @@
+/* ==========================================================================
+   ESTILOS GENERALES - SISTEMA DE RESERVAS MULTIRESTAURANTE (VUE.JS + CSS3)
+   ========================================================================== */
+
+:root {
+  --primary: #c59b27;
+  --primary-dark: #9e7916;
+  --primary-light: #fef8e7;
+  --secondary: #1a2238;
+  --secondary-light: #2c3652;
+  --accent: #aa1807;
+  --accent-green: #27ae60;
+  --accent-blue: #2980b9;
+  
+  --bg-main: #f5f7fb;
+  --bg-card: #ffffff;
+  --bg-sidebar: #131929;
+  
+  --text-main: #2d3748;
+  --text-muted: #718096;
+  --text-light: #f7fafc;
+  
+  --border: #e2e8f0;
+  --border-focus: #c59b27;
+  
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 10px 25px rgba(0,0,0,0.12);
+  
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+  
+  --transition: all 0.25s ease;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  overflow-x: hidden;
+}
+
+#app {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* ==========================================================================
+   BARRA LATERAL (SIDEBAR)
+   ========================================================================== */
+.sidebar {
+  width: 280px;
+  background-color: var(--bg-sidebar);
+  color: var(--text-light);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+  z-index: 20;
+}
+
+.sidebar-header {
+  padding: 24px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-badge {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 4px 10px rgba(197, 155, 39, 0.3);
+}
+
+.sidebar-header h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+}
+
+.sidebar-header span {
+  font-size: 0.75rem;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Selector de Rol y Restaurante */
+.role-badge-panel {
+  margin: 16px 20px;
+  padding: 14px;
+  background: rgba(255,255,255,0.04);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.role-tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.role-tag.jefe {
+  background: rgba(231, 76, 60, 0.2);
+  color: #ff7675;
+  border: 1px solid rgba(231, 76, 60, 0.4);
+}
+
+.role-tag.admin {
+  background: rgba(39, 174, 96, 0.2);
+  color: #55efc4;
+  border: 1px solid rgba(39, 174, 96, 0.4);
+}
+
+.user-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.user-rest-assigned {
+  font-size: 0.78rem;
+  color: #a0aec0;
+}
+
+.role-switcher-select {
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px 10px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  cursor: pointer;
+  outline: none;
+}
+.role-switcher-select option {
+  background: var(--secondary);
+  color: #fff;
+}
+
+/* Navegación Sidebar */
+.nav-menu {
+  list-style: none;
+  padding: 10px 14px;
+  flex: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  color: #cbd5e0;
+  cursor: pointer;
+  margin-bottom: 6px;
+  font-size: 0.92rem;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.nav-item:hover {
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+}
+
+.nav-item.active {
+  background: var(--primary);
+  color: #131929;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(197, 155, 39, 0.3);
+}
+
+.nav-icon {
+  font-size: 1.15rem;
+}
+
+/* Selector Restaurante para Jefe */
+.boss-restaurant-switch {
+  margin: 10px 20px 20px;
+  padding: 12px;
+  background: rgba(197, 155, 39, 0.1);
+  border: 1px dashed var(--primary);
+  border-radius: var(--radius-md);
+}
+
+.boss-restaurant-switch label {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--primary);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.boss-select {
+  width: 100%;
+  padding: 8px;
+  background: #1e263d;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+}
+
+/* ==========================================================================
+   CONTENIDO PRINCIPAL
+   ========================================================================== */
+.main-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  max-height: 100vh;
+}
+
+/* Topbar Header */
+.topbar {
+  background: var(--bg-card);
+  padding: 16px 32px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: var(--shadow-sm);
+}
+
+.restaurant-title-box h1 {
+  font-size: 1.4rem;
+  color: var(--secondary);
+  font-weight: 700;
+}
+
+.restaurant-title-box p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Botones */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #1a2238;
+}
+.btn-primary:hover {
+  background: var(--primary-dark);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(197, 155, 39, 0.35);
+}
+
+.btn-secondary {
+  background: #edf2f7;
+  color: var(--text-main);
+}
+.btn-secondary:hover {
+  background: #e2e8f0;
+}
+
+.btn-danger {
+  background: #fee2e2;
+  color: #a80b0b;
+}
+.btn-danger:hover {
+  background: #aa0606;
+  color: #fff;
+}
+
+.btn-icon {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: var(--radius-sm);
+  background: #f1f5f9;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  font-size: 1rem;
+}
+.btn-icon:hover {
+  background: #e2e8f0;
+}
+
+/* Vista Contenido */
+.content-body {
+  padding: 28px 32px;
+  flex: 1;
+}
+
+/* Banner de Métricas del Restaurante */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.metric-card {
+  background: var(--bg-card);
+  padding: 20px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.metric-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+.metric-icon.gold { background: #fef9e7; color: var(--primary-dark); }
+.metric-icon.green { background: #ecfdf5; color: var(--accent-green); }
+.metric-icon.blue { background: #eff6ff; color: var(--accent-blue); }
+.metric-icon.red { background: #fef2f2; color: var(--accent); }
+
+.metric-info h3 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--secondary);
+}
+.metric-info p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   VISTA DE CALENDARIO
+   ========================================================================== */
+.calendar-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.calendar-header {
+  padding: 20px 24px;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.calendar-nav {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.calendar-nav h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--secondary);
+  min-width: 220px;
+  text-align: center;
+}
+
+.calendar-grid-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: #f8fafc;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  padding: 12px 0;
+}
+
+.calendar-grid-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: minmax(105px, 1fr);
+  background: var(--border);
+  gap: 1px;
+}
+
+.calendar-day-cell {
+  background: #fff;
+  padding: 10px;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.calendar-day-cell:hover {
+  background: #fafbfc;
+  box-shadow: inset 0 0 0 2px var(--primary);
+}
+
+.calendar-day-cell.other-month {
+  background: #fbfcfe;
+  opacity: 0.45;
+}
+
+.calendar-day-cell.today {
+  background: #fefdf9;
+}
+
+.calendar-day-cell.today .day-number {
+  background: var(--primary);
+  color: #fff;
+  border-radius: var(--radius-full);
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.calendar-day-cell.selected {
+  background: #fdfbf3;
+  box-shadow: inset 0 0 0 2px var(--primary-dark);
+}
+
+.day-cell-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.day-number {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.day-badges {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-y: auto;
+  max-height: 75px;
+}
+
+.badge-item {
+  font-size: 0.72rem;
+  padding: 3px 6px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+.badge-item.confirmada {
+  background: #ecfdf5;
+  color: #065f46;
+  border-left: 3px solid #10b981;
+}
+
+.badge-item.pendiente {
+  background: #fffbeb;
+  color: #92400e;
+  border-left: 3px solid #f59e0b;
+}
+
+.badge-item.cancelada {
+  background: #fef2f2;
+  color: #991b1b;
+  border-left: 3px solid #b40a0a;
+}
+
+/* ==========================================================================
+   PANEL DE RESERVAS DEL DÍA SELECCIONADO
+   ========================================================================== */
+.day-schedule-section {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  padding: 24px;
+  margin-bottom: 30px;
+}
+
+.schedule-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+.schedule-header h3 {
+  font-size: 1.25rem;
+  color: var(--secondary);
+  font-weight: 700;
+}
+
+.schedule-header span {
+  color: var(--primary-dark);
+  font-weight: 600;
+}
+
+.reservations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+}
+.empty-state-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+/* Tarjeta de Reserva Individual */
+.reservation-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  background: #fff;
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reservation-card:hover {
+  border-color: #cbd5e0;
+  box-shadow: var(--shadow-sm);
+}
+
+.res-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.res-time-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.res-time {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--secondary);
+  background: #f1f5f9;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+}
+
+.res-client-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.status-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+}
+.status-badge.CONFIRMADA { background: #d1fae5; color: #065f46; }
+.status-badge.PENDIENTE { background: #fef3c7; color: #92400e; }
+.status-badge.CANCELADA { background: #fee2e2; color: #991b1b; }
+.status-badge.COMPLETADA { background: #e0e7ff; color: #3730a3; }
+
+.res-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  background: #f8fafc;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+}
+
+.res-detail-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.detail-value {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* Postre Incluido Tag */
+.dessert-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 700;
+  width: fit-content;
+}
+
+.dessert-pill.yes {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #c29b1c;
+}
+
+.dessert-pill.no {
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+}
+
+.res-notes {
+  font-size: 0.88rem;
+  color: #4a5568;
+  background: #fffbeb;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--primary);
+  margin-top: 4px;
+}
+
+.res-actions-bar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+}
+
+/* ==========================================================================
+   PANEL JEFE (CONFIGURACIÓN & RESTAURANTES)
+   ========================================================================== */
+.jefe-panel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 22px;
+  margin-top: 20px;
+}
+
+.restaurant-edit-card {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.rest-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rest-card-header h3 {
+  font-size: 1.2rem;
+  color: var(--secondary);
+}
+
+.active-switch {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   MODALES (CREAR / EDITAR RESERVA)
+   ========================================================================== */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(19, 25, 41, 0.65);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 20px;
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 650px;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  animation: modalFadeIn 0.25s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  font-size: 1.25rem;
+  color: var(--secondary);
+  font-weight: 700;
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.modal-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.form-control {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  outline: none;
+  transition: var(--transition);
+}
+
+.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(197, 155, 39, 0.15);
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Switch Postre Incluido */
+.switch-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fdfaf0;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid #f9eed3;
+}
+
+.switch-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #78350f;
+  flex: 1;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #cbd5e1;
+  transition: .3s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: var(--primary);
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  background: #f8fafc;
+}
+
+/* ==========================================================================
+   TOAST NOTIFICACIONES
+   ========================================================================== */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast {
+  background: var(--secondary);
+  color: #fff;
+  padding: 14px 20px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: toastSlide 0.3s ease-out;
+  border-left: 4px solid var(--primary);
+}
+
+@keyframes toastSlide {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* Responsividad */
+@media (max-width: 900px) {
+  body { flex-direction: column; }
+  .sidebar { width: 100%; height: auto; position: static; }
+  .form-row { grid-template-columns: 1fr; }
+  .content-body { padding: 16px; }
+}
+
+/* ==========================================================================
+   PANTALLA DE LOGIN
+   ========================================================================== */
+
+.login-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #131929 0%, #1a2238 50%, #0d1520 100%);
+  padding: 20px;
+}
+
+.login-card {
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 460px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+}
+
+.login-logo {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.login-logo-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.login-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--secondary);
+  letter-spacing: -0.5px;
+}
+
+.login-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.login-restaurants {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+
+.login-restaurants span {
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.5px;
+  border: 1px solid #f0d980;
+}
+
+.login-form .form-group {
+  margin-bottom: 18px;
+}
+
+.login-form label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-main);
+  margin-bottom: 7px;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-top: 8px;
+  letter-spacing: 0.3px;
+}
+
+.login-error {
+  background: #fff5f5;
+  border: 1px solid #feb2b2;
+  border-radius: var(--radius-sm);
+  color: #c53030;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  margin-bottom: 14px;
+}
+
+.login-hint {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 20px;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+
+/* ==========================================================================
+   BOTÓN CERRAR SESIÓN (SIDEBAR)
+   ========================================================================== */
+
+.btn-logout {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 14px;
+  padding: 9px 14px;
+  background: rgba(231, 76, 60, 0.12);
+  color: #e74c3c;
+  border: 1px solid rgba(231, 76, 60, 0.25);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: left;
+}
+
+.btn-logout:hover {
+  background: rgba(231, 76, 60, 0.22);
+  border-color: rgba(231, 76, 60, 0.5);
+}
+
+/* ==========================================================================
+   SECCIÓN GESTIÓN DE CUENTAS (PANEL JEFE)
+   ========================================================================== */
+
+.accounts-section {
+  margin-top: 40px;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
+}
+
+.accounts-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.accounts-header h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--secondary);
+}
+
+.add-user-form {
+  background: var(--primary-light);
+  border: 1px solid #f0d980;
+  border-radius: var(--radius-md);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.users-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  gap: 16px;
+  transition: var(--transition);
+}
+
+.user-card:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.user-card-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.user-avatar {
+  width: 44px;
+  height: 44px;
+  background: var(--primary-light);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  border: 2px solid #f0d980;
+  flex-shrink: 0;
+}
+
+.user-card-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--secondary);
+}
+
+.user-card-email {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.user-card-rest {
+  font-size: 0.78rem;
+  color: var(--primary-dark);
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.user-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   TEMAS DE COLOR POR RESTAURANTE
+   ========================================================================== */
+
+/* INNAMORATO FUSION — Rojo con Blanco */
+.theme-innamorato .topbar {
+  background: #c0392b;
+  border-bottom-color: #a93226;
+}
+.theme-innamorato .topbar .restaurant-title-box h1 {
+  color: #ffffff;
+}
+.theme-innamorato .topbar .restaurant-title-box p {
+  color: rgba(255,255,255,0.8);
+}
+.theme-innamorato .topbar .btn-primary {
+  background: #ffffff;
+  color: #c0392b;
+}
+.theme-innamorato .topbar .btn-primary:hover {
+  background: #f5f5f5;
+  color: #a93226;
+}
+.theme-innamorato .metric-card {
+  border-left: 4px solid #c0392b;
+}
+.theme-innamorato .calendar-day-cell.today .day-number {
+  background: #c0392b;
+}
+.theme-innamorato .calendar-day-cell.selected {
+  box-shadow: inset 0 0 0 2px #c0392b;
+}
+.theme-innamorato .calendar-day-cell:hover {
+  box-shadow: inset 0 0 0 2px #e74c3c;
+}
+.theme-innamorato .schedule-header span {
+  color: #c0392b;
+}
+.theme-innamorato .btn-primary {
+  background: #c0392b;
+  color: #ffffff;
+}
+.theme-innamorato .btn-primary:hover {
+  background: #a93226;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(192, 57, 43, 0.35);
+}
+
+/* CIELO ROSA — Rosado con Blanco */
+.theme-cielo-rosa .topbar {
+  background: #bd046a;
+  border-bottom-color: #be1458;
+}
+.theme-cielo-rosa .topbar .restaurant-title-box h1 {
+  color: #ffffff;
+}
+.theme-cielo-rosa .topbar .restaurant-title-box p {
+  color: rgba(255,255,255,0.8);
+}
+.theme-cielo-rosa .topbar .btn-primary {
+  background: #ffffff;
+  color: #c01372;
+}
+.theme-cielo-rosa .topbar .btn-primary:hover {
+  background: #f5f5f5;
+  color: #c2185b;
+}
+.theme-cielo-rosa .metric-card {
+  border-left: 4px solid #b11c6e;
+}
+.theme-cielo-rosa .calendar-day-cell.today .day-number {
+  background: #e91e8c;
+}
+.theme-cielo-rosa .calendar-day-cell.selected {
+  box-shadow: inset 0 0 0 2px #e91e8c;
+}
+.theme-cielo-rosa .calendar-day-cell:hover {
+  box-shadow: inset 0 0 0 2px #f06292;
+}
+.theme-cielo-rosa .schedule-header span {
+  color: #bb126f;
+}
+.theme-cielo-rosa .btn-primary {
+  background: #e91e8c;
+  color: #ffffff;
+}
+.theme-cielo-rosa .btn-primary:hover {
+  background: #c2185b;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(233, 30, 140, 0.35);
+}
+
+/* CASA JUAREZ — Negro con Blanco */
+.theme-casa-juarez .topbar {
+  background: #1a1a1a;
+  border-bottom-color: #000000;
+}
+.theme-casa-juarez .topbar .restaurant-title-box h1 {
+  color: #ffffff;
+}
+.theme-casa-juarez .topbar .restaurant-title-box p {
+  color: rgba(255,255,255,0.75);
+}
+.theme-casa-juarez .topbar .btn-primary {
+  background: #ffffff;
+  color: #1a1a1a;
+}
+.theme-casa-juarez .topbar .btn-primary:hover {
+  background: #e0e0e0;
+  color: #000000;
+}
+.theme-casa-juarez .metric-card {
+  border-left: 4px solid #1a1a1a;
+}
+.theme-casa-juarez .calendar-day-cell.today .day-number {
+  background: #1a1a1a;
+}
+.theme-casa-juarez .calendar-day-cell.selected {
+  box-shadow: inset 0 0 0 2px #1a1a1a;
+}
+.theme-casa-juarez .calendar-day-cell:hover {
+  box-shadow: inset 0 0 0 2px #333333;
+}
+.theme-casa-juarez .schedule-header span {
+  color: #1a1a1a;
+}
+.theme-casa-juarez .btn-primary {
+  background: #1a1a1a;
+  color: #ffffff;
+}
+.theme-casa-juarez .btn-primary:hover {
+  background: #333333;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+/* PRIMAVERA — Amarillo Opaco con Blanco */
+.theme-primavera .topbar {
+  background: #b8960c;
+  border-bottom-color: #9a7d0a;
+}
+.theme-primavera .topbar .restaurant-title-box h1 {
+  color: #ffffff;
+}
+.theme-primavera .topbar .restaurant-title-box p {
+  color: rgba(255,255,255,0.8);
+}
+.theme-primavera .topbar .btn-primary {
+  background: #ffffff;
+  color: #b8960c;
+}
+.theme-primavera .topbar .btn-primary:hover {
+  background: #f5f5f5;
+  color: #9a7d0a;
+}
+.theme-primavera .metric-card {
+  border-left: 4px solid #b8960c;
+}
+.theme-primavera .calendar-day-cell.today .day-number {
+  background: #b8960c;
+}
+.theme-primavera .calendar-day-cell.selected {
+  box-shadow: inset 0 0 0 2px #b8960c;
+}
+.theme-primavera .calendar-day-cell:hover {
+  box-shadow: inset 0 0 0 2px #d4ac0d;
+}
+.theme-primavera .schedule-header span {
+  color: #b8960c;
+}
+.theme-primavera .btn-primary {
+  background: #b8960c;
+  color: #ffffff;
+}
+.theme-primavera .btn-primary:hover {
+  background: #9a7d0a;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(184, 150, 12, 0.35);
+}
+
+/* ==========================================================================
+   LOGO DEL RESTAURANTE (TOPBAR)
+   ========================================================================== */
+.restaurant-logo-area {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+}
+
+.restaurant-logo-img {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  border: 2px solid rgba(255,255,255,0.3);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.restaurant-logo-placeholder {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--radius-md);
+  background: rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  border: 2px dashed rgba(255,255,255,0.3);
+}
+
+.logo-upload-btn {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 24px;
+  height: 24px;
+  background: var(--primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  transition: var(--transition);
+}
+
+.logo-upload-btn:hover {
+  transform: scale(1.1);
+  background: var(--primary-dark);
+}
+
+/* ==========================================================================
+   LOGO Y CARTA EN PANEL JEFE
+   ========================================================================== */
+.rest-logo-section,
+.rest-carta-section {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.rest-logo-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.rest-logo-thumb {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  border: 2px solid var(--border);
+}
+
+.rest-logo-thumb-placeholder {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-sm);
+  background: var(--primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  border: 2px dashed var(--border);
+}
+
