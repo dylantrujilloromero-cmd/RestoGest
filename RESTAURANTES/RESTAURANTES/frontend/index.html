@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RestoGest — Sistema de Reservas</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- CSS Principal -->
+  <link rel="stylesheet" href="css/styles.css">
+  <!-- Vue.js 3 desde CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+</head>
+<body>
+
+  <div id="app" v-cloak>
+
+    <!-- ===========================================================
+         PANTALLA DE LOGIN
+         =========================================================== -->
+    <div v-if="!isLoggedIn" class="login-screen">
+      <div class="login-card">
+
+        <!-- Logo / Marca -->
+        <div class="login-logo">
+          
+          <h1 class="login-title">RestoGest</h1>
+          <p class="login-subtitle">Sistema de Reservas Multirestaurante</p>
+        </div>
+
+        <!-- Restaurantes disponibles (decorativo) -->
+        <div class="login-restaurants">
+          <span>INNAMORATO FUSION</span>
+          <span>CIELO ROSA</span>
+          <span>CASA JUAREZ</span>
+          <span>LA BIRRIA</span>
+        </div>
+
+        <!-- Formulario -->
+        <div v-if="!showRecoverPassword" class="login-form">
+          <div class="form-group">
+            <label>Correo Electrónico</label>
+            <input
+              type="email"
+              class="form-control"
+              placeholder="correo@ejemplo.com"
+              v-model="loginForm.email"
+              @keyup.enter="doLogin"
+            >
+          </div>
+
+          <div class="form-group">
+            <label>Contraseña</label>
+            <input
+              type="password"
+              class="form-control"
+              placeholder="••••••••"
+              v-model="loginForm.password"
+              @keyup.enter="doLogin"
+            >
+          </div>
+
+          <!-- Error -->
+          <div v-if="loginForm.error" class="login-error">
+            {{ loginForm.error }}
+          </div>
+
+          <button
+            class="btn btn-primary login-btn"
+            @click="doLogin"
+            :disabled="loginLoading"
+          >
+            <span v-if="loginLoading">Verificando...</span>
+            <span v-else>Iniciar Sesión</span>
+          </button>
+          
+          <p class="login-recover-link" style="text-align:center; margin-top:12px;"><a href="#" @click.prevent="showRecoverPassword = true" style="color: var(--primary); font-size: 0.85rem; text-decoration: underline;">¿Olvidaste tu contraseña?</a></p>
+        </div>
+
+        <div v-if="showRecoverPassword" class="login-form">
+          <h3 style="text-align:center; margin-bottom:16px; color: var(--secondary);">Recuperar Contraseña</h3>
+          <p style="text-align:center; font-size:0.85rem; color: var(--text-muted); margin-bottom:20px;">Ingresa tu correo electrónico y te enviaremos las instrucciones para recuperar tu contraseña.</p>
+          <div class="form-group">
+            <label>Correo Electrónico</label>
+            <input type="email" class="form-control" placeholder="correo@ejemplo.com" v-model="recoverForm.email" @keyup.enter="doRecoverPassword">
+          </div>
+          <div v-if="recoverForm.error" class="login-error">{{ recoverForm.error }}</div>
+          <div v-if="recoverForm.message" style="background:#ecfdf5; border:1px solid #86efac; border-radius:6px; color:#065f46; padding:10px 14px; font-size:0.85rem; margin-bottom:14px;">{{ recoverForm.message }}</div>
+          <button class="btn btn-primary login-btn" @click="doRecoverPassword">Enviar Instrucciones</button>
+          <button class="btn btn-secondary login-btn" style="margin-top:8px;" @click="cancelRecover">Volver al Inicio de Sesión</button>
+        </div>
+
+        <p class="login-hint">Contacta al jefe para obtener tus credenciales de acceso.</p>
+      </div>
+    </div>
+
+    <!-- ===========================================================
+         APLICACIÓN PRINCIPAL (después del login)
+         =========================================================== -->
+    <template v-if="isLoggedIn">
+
+      <!-- =============================================================
+           BARRA LATERAL (SIDEBAR)
+           ============================================================= -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <div class="logo-badge">🍽️</div>
+          <div>
+            <h2>RestoGest</h2>
+            <span>4 Restaurantes</span>
+          </div>
+        </div>
+
+        <!-- Panel de usuario actual -->
+        <div class="role-badge-panel">
+          <div class="role-tag" :class="currentUser?.rol === 'JEFE' ? 'jefe' : 'admin'">
+            {{ currentUser?.rol === 'JEFE' ? '👑 Rol: Jefe' : '👤 Rol: Administrador' }}
+          </div>
+          <div class="user-name">{{ currentUser?.nombre_completo }}</div>
+          <div class="user-rest-assigned">
+            {{ isJefe ? 'Supervisión de los 4 Restaurantes' : currentRestaurant.nombre }}
+          </div>
+
+          <!-- Botón cerrar sesión -->
+          <button class="btn-logout" @click="doLogout">
+            Cerrar Sesión
+          </button>
+        </div>
+
+        <!-- Selector de Restaurante para el Jefe -->
+        <div v-if="isJefe" class="boss-restaurant-switch">
+          <label>Vista de Restaurante (Jefe):</label>
+          <select class="boss-select" :value="selectedRestaurantId" @change="onBossRestaurantChange">
+            <option v-for="r in restaurantes" :key="r.id" :value="r.id">
+              {{ r.nombre }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Menú de Navegación -->
+        <ul class="nav-menu">
+          <li class="nav-item" :class="{ active: activeTab === 'calendario' }" @click="activeTab = 'calendario'">
+            <span class="nav-icon"></span>
+            <span>Calendario de Reservas</span>
+          </li>
+          <li class="nav-item" :class="{ active: activeTab === 'reservas_lista' }" @click="activeTab = 'reservas_lista'">
+            <span class="nav-icon"></span>
+            <span>Lista de Reservas</span>
+          </li>
+          <li class="nav-item" :class="{ active: activeTab === 'novedades' }" @click="activeTab = 'novedades'">
+            <span class="nav-icon"></span>
+            <span>Novedades</span>
+          </li>
+          <li class="nav-item" :class="{ active: activeTab === 'briefing' }" @click="activeTab = 'briefing'">
+            <span class="nav-icon"></span>
+            <span>Briefing</span>
+          </li>
+          <li v-if="isJefe" class="nav-item" :class="{ active: activeTab === 'ajustes_jefe' }" @click="activeTab = 'ajustes_jefe'">
+            <span class="nav-icon"></span>
+            <span>Ajustes y Cuentas</span>
+          </li>
+        </ul>
+
+        <!-- Footer Info -->
+        <div style="padding: 16px 20px; font-size: 0.75rem; color: #718096; border-top: 1px solid rgba(255,255,255,0.06);">
+          Base de Datos: <strong>PostgreSQL</strong><br>
+          Sin módulo de facturación
+        </div>
+      </aside>
+
+      <!-- =============================================================
+           CONTENEDOR PRINCIPAL
+           ============================================================= -->
+      <main class="main-wrapper" :class="restaurantThemeClass">
+
+        <!-- Topbar Header -->
+        <header class="topbar">
+          <div style="display: flex; align-items: center; gap: 18px;">
+            <!-- Logo del Restaurante -->
+            <div class="restaurant-logo-area">
+              <img v-if="currentRestaurantLogo" :src="currentRestaurantLogo" alt="Logo" class="restaurant-logo-img">
+              <div v-else class="restaurant-logo-placeholder">🍽️</div>
+              <label v-if="isJefe" class="logo-upload-btn" title="Subir logo del restaurante">
+                📷
+                <input type="file" accept="image/*" @change="onLogoUpload" style="display:none;">
+              </label>
+            </div>
+            <div class="restaurant-title-box">
+              <h1>{{ currentRestaurant.nombre }}</h1>
+              <p>{{ currentRestaurant.direccion }} • Tel: {{ currentRestaurant.telefono }}</p>
+            </div>
+            <a v-if="currentRestaurantCarta" :href="currentRestaurantCarta" target="_blank" class="btn btn-secondary" style="padding:6px 14px; font-size:0.82rem; text-decoration:none; margin-left:12px;" title="Ver Carta del Restaurante">
+              📄 Ver Carta
+            </a>
+          </div>
+          <div class="topbar-actions">
+            <button class="btn btn-primary" @click="openCreateModal()">
+              <span>➕</span>
+              <span>Añadir Reserva</span>
+            </button>
+          </div>
+        </header>
+
+        <!-- Cuerpo de Contenido -->
+        <div class="content-body">
+
+          <!-- Métricas Rápidas del Día -->
+          <section class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-icon gold"></div>
+              <div class="metric-info">
+                <h3>{{ metricTotalHoy }}</h3>
+                <p>Reservas para Hoy</p>
+              </div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-icon green"></div>
+              <div class="metric-info">
+                <h3>{{ metricConfirmadasHoy }}</h3>
+                <p>Confirmadas Hoy</p>
+              </div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-icon blue"></div>
+              <div class="metric-info">
+                <h3>{{ metricComensalesHoy }}</h3>
+                <p>Personas Esperadas Hoy</p>
+              </div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-icon red"></div>
+              <div class="metric-info">
+                <h3>{{ formatTimeTo12h(currentRestaurant.hora_apertura) }} - {{ formatTimeTo12h(currentRestaurant.hora_cierre) }}</h3>
+                <p>Horario de Atención</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- =====================================================
+               PESTAÑA 1: CALENDARIO
+               ===================================================== -->
+          <div v-if="activeTab === 'calendario'">
+            <div class="calendar-card">
+              <div class="calendar-header">
+                <div class="calendar-nav">
+                  <button class="btn btn-secondary" @click="goToToday">Hoy</button>
+                  <button class="btn-icon" @click="prevMonth">◀</button>
+                  <h2>{{ monthYearTitle }}</h2>
+                  <button class="btn-icon" @click="nextMonth">▶</button>
+                </div>
+                <div style="font-size: 0.85rem; color: var(--text-muted);">
+                  Haz clic en cualquier día para ver sus reservas programadas
+                </div>
+              </div>
+
+              <div class="calendar-grid-header">
+                <div>Lun</div><div>Mar</div><div>Mié</div>
+                <div>Jue</div><div>Vie</div><div>Sáb</div><div>Dom</div>
+              </div>
+
+              <div class="calendar-grid-days">
+                <div
+                  v-for="(cell, idx) in calendarGridCells"
+                  :key="idx"
+                  class="calendar-day-cell"
+                  :class="{ 'other-month': cell.isOtherMonth, 'today': cell.isToday, 'selected': cell.isSelected }"
+                  @click="selectDate(cell)"
+                >
+                  <div class="day-cell-top">
+                    <span class="day-number">{{ cell.dayNumber }}</span>
+                    <span v-if="cell.reservations.length > 0" style="font-size: 0.72rem; font-weight: 700; color: var(--primary-dark);">
+                      {{ cell.reservations.length }} res.
+                    </span>
+                  </div>
+                  <div class="day-badges">
+                    <div
+                      v-for="res in cell.reservations.slice(0, 3)"
+                      :key="res.id"
+                      class="badge-item"
+                      :class="res.estado.toLowerCase()"
+                      :title="`${formatTimeTo12h(res.hora)} - ${res.nombre_cliente} (${res.numero_personas} pers.)`"
+                    >
+                      {{ formatTimeTo12h(res.hora) }} • {{ res.nombre_cliente }}
+                    </div>
+                    <div v-if="cell.reservations.length > 3" style="font-size: 0.68rem; color: var(--text-muted); text-align: center;">
+                      +{{ cell.reservations.length - 3 }} más
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel de detalle del día -->
+            <section class="day-schedule-section">
+              <div class="schedule-header">
+                <div>
+                  <h3>Reservas Programadas: <span>{{ formatDisplayDate(selectedDateStr) }}</span></h3>
+                  <p style="font-size: 0.85rem; color: var(--text-muted);">
+                    Total: {{ dayReservations.length }} reservas para este día en {{ currentRestaurant.nombre }}
+                  </p>
+                </div>
+                <button class="btn btn-primary" @click="openCreateModal(selectedDateStr)">
+                  <span>➕ Añadir en esta fecha</span>
+                </button>
+              </div>
+
+              <div v-if="dayReservations.length === 0" class="empty-state">
+                <div class="empty-state-icon">📭</div>
+                <h4>No hay reservas programadas para este día</h4>
+                <p>El administrador puede añadir una nueva reserva usando el botón superior.</p>
+              </div>
+
+              <div v-else class="reservations-list">
+                <div v-for="res in dayReservations" :key="res.id" class="reservation-card">
+                  <div class="res-header">
+                    <div class="res-time-box">
+                      <span class="res-time"> {{ formatTimeTo12h(res.hora) }}</span>
+                      <span class="res-client-name">{{ res.nombre_cliente }}</span>
+                      <span style="color: var(--text-muted); font-size: 0.88rem;">({{ res.numero_personas }} personas)</span>
+                    </div>
+                    <span class="status-badge" :class="res.estado">{{ res.estado }}</span>
+                  </div>
+
+                  <div class="res-details-grid">
+                    <div class="res-detail-item">
+                      <span class="detail-label">Contacto:</span>
+                      <span class="detail-value">{{ res.telefono_contacto }}</span>
+                      <span style="font-size: 0.75rem; color: var(--text-muted);">{{ res.email_contacto || 'Sin email' }}</span>
+                    </div>
+                    
+                    <div class="res-detail-item">
+                      <span class="detail-label">Ocasión:</span>
+                      <span class="detail-value">{{ getOccasionLabel(res.ocasion) }}</span>
+                    </div>
+
+                    <div class="res-detail-item">
+                      <span class="detail-label">Personas:</span>
+                      <span class="detail-value">{{ res.numero_personas }} persona{{ res.numero_personas !== 1 ? 's' : '' }}</span>
+                    </div>
+
+                    <div class="res-detail-item">
+                      <span class="detail-label">Postre:</span>
+                      <span class="dessert-pill" :class="res.postre_incluido ? 'yes' : 'no'">
+                        {{ res.postre_incluido ? 'Sí, incluido' : 'No incluido' }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div v-if="res.descripcion_notas" class="res-notes">
+                    <strong>Peticiones / Notas:</strong> {{ res.descripcion_notas }}
+                  </div>
+
+                  <div class="res-actions-bar">
+                    <span style="font-size: 0.75rem; color: var(--text-muted); margin-right: auto; align-self: center;">
+                      Registrado por: <strong>{{ res.creado_por }}</strong>
+                      <span v-if="res.ultimo_editor !== res.creado_por"> • Editado por: <strong>{{ res.ultimo_editor }}</strong></span>
+                    </span>
+                    <button class="btn btn-secondary" @click="openEditModal(res)">Editar</button>
+                    <button v-if="res.estado !== 'CANCELADA'" class="btn btn-danger" @click="cancelReservation(res)">Cancelar</button>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- =====================================================
+               PESTAÑA 2: LISTA GENERAL DE RESERVAS
+               ===================================================== -->
+          <div v-if="activeTab === 'reservas_lista'">
+            <div class="day-schedule-section">
+              <div class="schedule-header">
+                <h3>Listado Completo de Reservas ({{ filteredReservas.length }})</h3>
+                <button class="btn btn-primary" @click="openCreateModal()">➕ Nueva Reserva</button>
+              </div>
+
+              <div class="reservations-list">
+                <div v-for="res in filteredReservas" :key="res.id" class="reservation-card">
+                  <div class="res-header">
+                    <div class="res-time-box">
+                      <span class="res-time">{{ res.fecha }} • {{ formatTimeTo12h(res.hora) }}</span>
+                      <span class="res-client-name">{{ res.nombre_cliente }}</span>
+                      <span style="color: var(--text-muted);">({{ res.numero_personas }} Comensales)</span>
+                    </div>
+                    <span class="status-badge" :class="res.estado">{{ res.estado }}</span>
+                  </div>
+                  <div class="res-details-grid">
+                    <div class="res-detail-item"><span class="detail-label">Contacto:</span><span class="detail-value">{{ res.telefono_contacto }}</span></div>
+                    <div class="res-detail-item"><span class="detail-label">Ocasión:</span><span class="detail-value">{{ getOccasionLabel(res.ocasion) }}</span></div>
+                    <div class="res-detail-item">
+                      <span class="detail-label">Postre:</span>
+                      <span class="dessert-pill" :class="res.postre_incluido ? 'yes' : 'no'">{{ res.postre_incluido ? 'Sí, incluido' : 'No' }}</span>
+                    </div>
+                  </div>
+                  <div class="res-actions-bar">
+                    <button class="btn btn-secondary" @click="openEditModal(res)">Editar</button>
+                    <button v-if="res.estado !== 'CANCELADA'" class="btn btn-danger" @click="cancelReservation(res)">Cancelar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- =====================================================
+               PESTAÑA 3: PANEL JEFE — AJUSTES Y CUENTAS
+               ===================================================== -->
+          <div v-if="activeTab === 'ajustes_jefe' && isJefe">
+
+            <!-- ── Sección: Gestión de Restaurantes ── -->
+            <h2 style="margin-bottom: 6px;">Ajustes de Restaurantes</h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px;">
+              Modifica información, horarios y capacidad de cada restaurante.
+            </p>
+
+            <div class="jefe-panel-grid">
+              <div v-for="r in restaurantes" :key="r.id" class="restaurant-edit-card">
+                <div class="rest-card-header">
+                  <h3>{{ r.nombre }}</h3>
+                  <span class="status-badge" :class="r.activo ? 'CONFIRMADA' : 'CANCELADA'">
+                    {{ r.activo ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </div>
+
+                <!-- Logo del restaurante -->
+                <div class="rest-logo-section">
+                  <label class="rest-logo-label">Logo del Restaurante:</label>
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <img v-if="getRestaurantLogo(r.id)" :src="getRestaurantLogo(r.id)" alt="Logo" class="rest-logo-thumb">
+                    <div v-else class="rest-logo-thumb-placeholder">🍽️</div>
+                    <label class="btn btn-secondary" style="cursor:pointer; margin: 0;">
+                      Subir Logo
+                      <input type="file" accept="image/*" @change="onRestaurantLogoUpload($event, r.id)" style="display:none;">
+                    </label>
+                    <button v-if="getRestaurantLogo(r.id)" class="btn btn-danger" style="padding: 6px 12px; font-size: 0.78rem;" @click="removeRestaurantLogo(r.id)">Quitar</button>
+                  </div>
+                </div>
+
+                <!-- Carta PDF -->
+                <div class="rest-carta-section">
+                  <label class="rest-logo-label">Carta / Menú (PDF):</label>
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <label class="btn btn-secondary" style="cursor:pointer; margin: 0;">
+                      Subir PDF
+                      <input type="file" accept="application/pdf" @change="onCartaUpload($event, r.id)" style="display:none;">
+                    </label>
+                    <a v-if="getRestaurantCarta(r.id)" :href="getRestaurantCarta(r.id)" target="_blank" class="btn btn-primary" style="padding: 6px 14px; font-size: 0.8rem; text-decoration: none;">
+                      Ver Carta
+                    </a>
+                    <button v-if="getRestaurantCarta(r.id)" class="btn btn-danger" style="padding: 6px 12px; font-size: 0.78rem;" @click="removeRestaurantCarta(r.id)">Quitar PDF</button>
+                    <span v-if="!getRestaurantCarta(r.id)" style="font-size: 0.8rem; color: var(--text-muted);">Sin carta cargada</span>
+                  </div>
+                </div>
+
+                <p style="font-size: 0.85rem; color: #4a5568;">{{ r.descripcion }}</p>
+                <div style="font-size: 0.82rem; color: var(--text-muted);">
+                  {{ r.direccion }}<br>
+                  {{ r.telefono }}<br>
+                  Horario: {{ formatTimeTo12h(r.hora_apertura) }} - {{ formatTimeTo12h(r.hora_cierre) }}<br>
+                  Capacidad: {{ r.capacidad_maxima }} personas
+                </div>
+                <button class="btn btn-secondary" @click="startEditRestaurant(r)">
+                  Ajustar Datos
+                </button>
+              </div>
+            </div>
+
+            <!-- Formulario edición de restaurante -->
+            <div v-if="editRestaurantForm.id" style="margin-top: 30px; background: #fff; padding: 24px; border-radius: var(--radius-lg); border: 1px solid var(--border);">
+              <h3>Editando: {{ editRestaurantForm.nombre }}</h3>
+              <div class="modal-body" style="padding: 16px 0;">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Nombre del Restaurante:</label>
+                    <input class="form-control" v-model="editRestaurantForm.nombre">
+                  </div>
+                  <div class="form-group">
+                    <label>Teléfono:</label>
+                    <input class="form-control" v-model="editRestaurantForm.telefono">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Dirección:</label>
+                  <input class="form-control" v-model="editRestaurantForm.direccion">
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Hora Apertura:</label>
+                    <input type="time" class="form-control" v-model="editRestaurantForm.hora_apertura">
+                  </div>
+                  <div class="form-group">
+                    <label>Hora Cierre:</label>
+                    <input type="time" class="form-control" v-model="editRestaurantForm.hora_cierre">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Capacidad Máxima:</label>
+                    <input type="number" class="form-control" v-model="editRestaurantForm.capacidad_maxima">
+                  </div>
+                  <div class="form-group" style="justify-content: center;">
+                    <label>Estado:</label>
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-top: 8px;">
+                      <input type="checkbox" v-model="editRestaurantForm.activo">
+                      <span>Restaurante Activo</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button class="btn btn-secondary" @click="editRestaurantForm.id = ''">Cancelar</button>
+                <button class="btn btn-primary" @click="saveRestaurantChanges">Guardar Ajustes</button>
+              </div>
+            </div>
+
+            <!-- ── Sección: Gestión de Cuentas de Administrador ── -->
+            <div class="accounts-section">
+              <div class="accounts-header">
+                <div>
+                  <h2>Gestión de Cuentas de Administrador</h2>
+                  <p style="color: var(--text-muted); margin-top: 4px;">
+                    Crea o elimina cuentas para que los administradores inicien sesión en sus restaurantes.
+                  </p>
+                </div>
+                <button class="btn btn-primary" @click="openAddUserForm" v-if="!showAddUserForm">
+                  Nueva Cuenta
+                </button>
+              </div>
+
+              <!-- Formulario para nueva cuenta -->
+              <div v-if="showAddUserForm" class="add-user-form">
+                <h3 style="margin-bottom: 16px;">Crear Nueva Cuenta de Administrador</h3>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Nombre Completo *</label>
+                    <input type="text" class="form-control" placeholder="Ej: Ana García" v-model="newUserForm.nombre_completo">
+                  </div>
+                  <div class="form-group">
+                    <label>Correo Electrónico *</label>
+                    <input type="email" class="form-control" placeholder="correo@ejemplo.com" v-model="newUserForm.email">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Contraseña *</label>
+                    <input type="password" class="form-control" placeholder="Mínimo 6 caracteres" v-model="newUserForm.password">
+                  </div>
+                  <div class="form-group">
+                    <label>Restaurante Asignado *</label>
+                    <select class="form-control" v-model="newUserForm.restaurante_id">
+                      <option v-for="r in restaurantes" :key="r.id" :value="r.id">{{ r.nombre }}</option>
+                    </select>
+                  </div>
+                </div>
+                <div v-if="newUserForm.error" class="login-error" style="margin-bottom: 12px;">
+                  {{ newUserForm.error }}
+                </div>
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                  <button class="btn btn-secondary" @click="cancelAddUser">Cancelar</button>
+                  <button class="btn btn-primary" @click="saveNewUser">Crear Cuenta</button>
+                </div>
+              </div>
+
+              <!-- Lista de administradores existentes -->
+              <div class="users-list">
+                <div v-for="user in adminUsuarios" :key="user.id" class="user-card">
+                  <div class="user-card-info">
+                    <div class="user-avatar">👤</div>
+                    <div>
+                      <div class="user-card-name">{{ user.nombre_completo }}</div>
+                      <div class="user-card-email">{{ user.email }}</div>
+                      <div class="user-card-rest">
+                      {{ getRestaurantName(user.restaurante_id) }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="user-card-actions">
+                    <span class="status-badge CONFIRMADA">Admin</span>
+                    <button class="btn btn-danger" @click="deleteUser(user.id)" >Eliminar Cuenta</button>
+                  </div>
+                </div>
+                <div v-if="adminUsuarios.length === 0" class="empty-state" style="padding: 30px 0;">
+                  <div class="empty-state-icon">👤</div>
+                  <h4>No hay cuentas de administrador aún</h4>
+                  <p>Usa el botón "Nueva Cuenta" para crear la primera.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- ── Sección: Mensaje para Clientes en Formulario Público ── -->
+            <div class="accounts-section" style="margin-top: 30px;">
+              <div class="accounts-header">
+                <div>
+                  <h2>📢 Mensaje para Clientes</h2>
+                  <p style="color: var(--text-muted); margin-top: 4px;">
+                    Este mensaje se muestra en el formulario de reserva público de cada restaurante. Puedes indicar instrucciones de pago, políticas de reserva, etc.
+                  </p>
+                </div>
+                <a href="reservar.html" target="_blank" class="btn btn-secondary" style="text-decoration:none; display:inline-flex; align-items:center; gap:8px;">
+                  🔗 Ver Formulario Público
+                </a>
+              </div>
+
+              <div v-for="r in restaurantes" :key="'msg-'+r.id" style="background:#fff; border:1px solid var(--border); border-radius:var(--radius-md); padding:20px 22px; margin-bottom:16px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                  <div>
+                    <h4 style="color:var(--secondary); font-size:0.95rem; font-weight:700;">{{ r.nombre }}</h4>
+                    <p style="font-size:0.78rem; color:var(--text-muted);">{{ r.descripcion }}</p>
+                  </div>
+                  <span class="status-badge CONFIRMADA" style="font-size:0.72rem;">Activo</span>
+                </div>
+                <div class="form-group">
+                  <label style="font-size:0.8rem;">Mensaje visible para el cliente en el formulario de reserva:</label>
+                  <textarea
+                    class="form-control"
+                    rows="4"
+                    :value="getAdminMsg(r.id)"
+                    @input="setAdminMsg(r.id, $event.target.value)"
+                    placeholder="Ej: Para confirmar tu reserva, realiza tu pago y adjunta el comprobante..."
+                  ></textarea>
+                </div>
+                <div style="display:flex; justify-content:flex-end; margin-top:8px;">
+                  <button class="btn btn-primary" style="padding:8px 20px; font-size:0.82rem;" @click="saveAdminMsg(r.id)">
+                    💾 Guardar Mensaje
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <!-- fin pestaña jefe -->
+
+          <!-- PESTAÑA: NOVEDADES -->
+          <div v-if="activeTab === 'novedades'">
+            <div class="day-schedule-section">
+              <div class="schedule-header">
+                <h3>Novedades — {{ currentRestaurant.nombre }}</h3>
+                <div style="display:flex; gap:12px; align-items:center;">
+                  <input type="text" class="form-control" placeholder="Buscar por asunto..." v-model="busquedaNovedad" style="max-width:250px;">
+                  <button class="btn btn-primary" @click="openNovedadForm()">➕ Agregar Novedad</button>
+                </div>
+              </div>
+              <!-- Filtros -->
+              <div style="display:flex; gap:10px; margin-bottom:20px;">
+                <button class="btn" :class="filtroNovedad === 'todas' ? 'btn-primary' : 'btn-secondary'" @click="filtroNovedad = 'todas'">Todas</button>
+                <button class="btn" :class="filtroNovedad === 'Novedad del Personal' ? 'btn-primary' : 'btn-secondary'" @click="filtroNovedad = 'Novedad del Personal'">Novedad del Personal</button>
+                <button class="btn" :class="filtroNovedad === 'Novedad del Establecimiento' ? 'btn-primary' : 'btn-secondary'" @click="filtroNovedad = 'Novedad del Establecimiento'">Novedad del Establecimiento</button>
+              </div>
+              <!-- Lista -->
+              <div v-if="filteredNovedades.length === 0" class="empty-state">
+                <div class="empty-state-icon">📋</div>
+                <h4>No hay novedades registradas</h4>
+                <p>Usa el botón "Agregar Novedad" para crear la primera.</p>
+              </div>
+              <div v-else class="reservations-list">
+                <div v-for="nov in filteredNovedades" :key="nov.id" class="reservation-card">
+                  <div class="res-header">
+                    <div class="res-time-box">
+                      <span class="res-client-name">{{ nov.asunto }}</span>
+                      <span style="color: var(--text-muted); font-size:0.85rem;">{{ nov.fecha }}</span>
+                    </div>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                      <span class="status-badge" :class="nov.prioridad === 'Alta' ? 'CANCELADA' : nov.prioridad === 'Media' ? 'PENDIENTE' : 'CONFIRMADA'">{{ nov.prioridad }}</span>
+                      <span class="status-badge" style="background:#e0e7ff; color:#3730a3;">{{ nov.tipo }}</span>
+                      <button class="btn btn-secondary" @click="verNovedad(nov)">Ver</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PESTAÑA: BRIEFING -->
+          <div v-if="activeTab === 'briefing'">
+            <div class="day-schedule-section">
+              <div class="schedule-header">
+                <h3>Briefing — {{ currentRestaurant.nombre }}</h3>
+                <button class="btn btn-primary" @click="openBriefingForm()">➕ Agregar Briefing</button>
+              </div>
+              <!-- Lista -->
+              <div v-if="filteredBriefings.length === 0" class="empty-state">
+                <div class="empty-state-icon">📝</div>
+                <h4>No hay briefings registrados</h4>
+                <p>Usa el botón "Agregar Briefing" para crear el primero.</p>
+              </div>
+              <div v-else class="reservations-list">
+                <div v-for="br in filteredBriefings" :key="br.id" class="reservation-card">
+                  <div class="res-header">
+                    <div class="res-time-box">
+                      <span class="res-time">{{ br.fecha }}</span>
+                      <span class="res-client-name">Briefing del día</span>
+                    </div>
+                    <button class="btn btn-secondary" @click="verBriefing(br)">Ver</button>
+                  </div>
+                  <div class="res-details-grid">
+                    <div class="res-detail-item">
+                      <span class="detail-label">86 (No hay):</span>
+                      <span class="detail-value">{{ br.no_hay ? br.no_hay.substring(0, 60) + '...' : 'Sin datos' }}</span>
+                    </div>
+                    <div class="res-detail-item">
+                      <span class="detail-label">85 (Por acabarse):</span>
+                      <span class="detail-value">{{ br.por_acabarse ? br.por_acabarse.substring(0, 60) + '...' : 'Sin datos' }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </main>
+
+      <!-- =============================================================
+           MODAL: CREAR NUEVA RESERVA
+           ============================================================= -->
+      <div v-if="showCreateModal" class="modal-backdrop" @click.self="showCreateModal = false">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>➕ Añadir Nueva Reserva — {{ currentRestaurant.nombre }}</h3>
+            <button class="modal-close-btn" @click="showCreateModal = false">×</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Fecha de Reserva *</label>
+                <input type="date" class="form-control" v-model="formReserva.fecha" required>
+              </div>
+              <div class="form-group">
+                <label>Hora *</label>
+                <input type="time" class="form-control" v-model="formReserva.hora" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Nombre Completo del Cliente *</label>
+                <input type="text" class="form-control" placeholder="Ej: Juan Pérez" v-model="formReserva.nombre_cliente" required>
+              </div>
+              <div class="form-group">
+                <label>Número de Personas *</label>
+                <input type="number" min="1" max="50" class="form-control" v-model="formReserva.numero_personas" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Teléfono de Contacto * (solo números, máx. 10)</label>
+                <input type="tel" class="form-control" placeholder="9998887770" v-model="formReserva.telefono_contacto" maxlength="10" @input="filterPhoneInput" required>
+              </div>
+              <div class="form-group">
+                <label>Correo Electrónico</label>
+                <input type="email" class="form-control" placeholder="cliente@correo.com" v-model="formReserva.email_contacto">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Ocasión</label>
+                <select class="form-control" v-model="formReserva.ocasion">
+                  <option v-for="oc in ocasionesDisponibles" :key="oc.id" :value="oc.id">{{ oc.label }}</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Plan</label>
+                <select class="form-control" v-model="formReserva.plan">
+                  <option v-for="p in planesSelector" :key="p.id" :value="p.id">{{ p.label }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="switch-container">
+              <div class="switch-label">
+                ¿Postre Incluido en la Reserva?
+                <div style="font-size: 0.75rem; font-weight: 400; color: #92400e;">Activa si incluye postre</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" v-model="formReserva.postre_incluido">
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="form-group">
+              <label>Estado de la Reserva</label>
+              <select class="form-control" v-model="formReserva.estado">
+                <option value="CONFIRMADA">CONFIRMADA</option>
+                <option value="PENDIENTE">PENDIENTE</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Descripción / Peticiones Especiales</label>
+              <textarea class="form-control" rows="3" placeholder="Ej: Mesa decorada, alergia a mariscos..." v-model="formReserva.descripcion_notas"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" @click="showCreateModal = false">Cancelar</button>
+            <button class="btn btn-primary" @click="saveNewReservation">Guardar en Calendario</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- =============================================================
+           MODAL: EDITAR RESERVA
+           ============================================================= -->
+      <div v-if="showEditModal" class="modal-backdrop" @click.self="showEditModal = false">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Editar Reserva — {{ formReserva.nombre_cliente }}</h3>
+            <button class="modal-close-btn" @click="showEditModal = false">×</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Fecha de Reserva</label>
+                <input type="date" class="form-control" v-model="formReserva.fecha">
+              </div>
+              <div class="form-group">
+                <label>Hora</label>
+                <input type="time" class="form-control" v-model="formReserva.hora">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Nombre del Cliente</label>
+                <input type="text" class="form-control" v-model="formReserva.nombre_cliente">
+              </div>
+              <div class="form-group">
+                <label>Número de Personas</label>
+                <input type="number" min="1" max="50" class="form-control" v-model="formReserva.numero_personas">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Teléfono (solo números, máx. 10)</label>
+                <input type="tel" class="form-control" v-model="formReserva.telefono_contacto" maxlength="10" @input="filterPhoneInput">
+              </div>
+              <div class="form-group">
+                <label>Correo</label>
+                <input type="email" class="form-control" v-model="formReserva.email_contacto">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Plan</label>
+                <select class="form-control" v-model="formReserva.plan">
+                  <option v-for="p in planesSelector" :key="p.id" :value="p.id">{{ p.label }}</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Ocasión</label>
+                <select class="form-control" v-model="formReserva.ocasion">
+                  <option v-for="oc in ocasionesDisponibles" :key="oc.id" :value="oc.id">{{ oc.label }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Estado</label>
+                <select class="form-control" v-model="formReserva.estado">
+                  <option value="CONFIRMADA">CONFIRMADA</option>
+                  <option value="PENDIENTE">PENDIENTE</option>
+                  <option value="COMPLETADA">FINALIZADA</option>
+                  <option value="CANCELADA">CANCELADA</option>
+                </select>
+              </div>
+              <div class="form-group" style="justify-content: center;">
+                <div class="switch-container" style="padding: 8px 12px; margin-top: 18px;">
+                  <div class="switch-label" style="font-size: 0.82rem;">Postre Incluido</div>
+                  <label class="switch">
+                    <input type="checkbox" v-model="formReserva.postre_incluido">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Notas</label>
+              <textarea class="form-control" rows="3" v-model="formReserva.descripcion_notas"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" @click="showEditModal = false">Cancelar</button>
+            <button class="btn btn-primary" @click="updateReservation">Guardar Cambios</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL: AGREGAR NOVEDAD -->
+      <div v-if="showNovedadForm" class="modal-backdrop" @click.self="showNovedadForm = false">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>📋 Agregar Novedad — {{ currentRestaurant.nombre }}</h3>
+            <button class="modal-close-btn" @click="showNovedadForm = false">×</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Nombre de quien realiza la novedad *</label>
+                <input type="text" class="form-control" placeholder="Nombre completo" v-model="formNovedad.nombre_realiza">
+              </div>
+              <div class="form-group">
+                <label>Nombre a quien va dirigida *</label>
+                <input type="text" class="form-control" placeholder="Nombre del destinatario" v-model="formNovedad.nombre_dirigida">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Fecha *</label>
+                <input type="date" class="form-control" v-model="formNovedad.fecha">
+              </div>
+              <div class="form-group">
+                <label>Prioridad *</label>
+                <select class="form-control" v-model="formNovedad.prioridad">
+                  <option value="Alta">Alta</option>
+                  <option value="Media">Media</option>
+                  <option value="Baja">Baja</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Asunto *</label>
+              <input type="text" class="form-control" placeholder="Asunto de la novedad" v-model="formNovedad.asunto">
+            </div>
+            <div class="form-group">
+              <label>Descripción</label>
+              <textarea class="form-control" rows="4" placeholder="Describe la novedad..." v-model="formNovedad.descripcion"></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Tipo de Novedad *</label>
+                <select class="form-control" v-model="formNovedad.tipo">
+                  <option value="Novedad del Personal">Novedad del Personal</option>
+                  <option value="Novedad del Establecimiento">Novedad del Establecimiento</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Agregar Imagen (JPG, PNG)</label>
+                <input type="file" class="form-control" accept="image/jpeg,image/png" @change="onNovedadImageUpload">
+                <img v-if="formNovedad.imagen_preview" :src="formNovedad.imagen_preview" style="max-width:120px; margin-top:8px; border-radius:8px; border:1px solid var(--border);" alt="Preview">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" @click="showNovedadForm = false">Cancelar</button>
+            <button class="btn btn-primary" @click="saveNovedad">Guardar Novedad</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL: VER NOVEDAD -->
+      <div v-if="showNovedadDetalle && novedadDetalle" class="modal-backdrop" @click.self="closeNovedadDetalle">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>📋 Detalle de Novedad</h3>
+            <button class="modal-close-btn" @click="closeNovedadDetalle">×</button>
+          </div>
+          <div class="modal-body">
+            <div class="res-details-grid">
+              <div class="res-detail-item">
+                <span class="detail-label">Realizada por:</span>
+                <span class="detail-value">{{ novedadDetalle.nombre_realiza }}</span>
+              </div>
+              <div class="res-detail-item">
+                <span class="detail-label">Dirigida a:</span>
+                <span class="detail-value">{{ novedadDetalle.nombre_dirigida }}</span>
+              </div>
+              <div class="res-detail-item">
+                <span class="detail-label">Fecha:</span>
+                <span class="detail-value">{{ novedadDetalle.fecha }}</span>
+              </div>
+              <div class="res-detail-item">
+                <span class="detail-label">Prioridad:</span>
+                <span class="status-badge" :class="novedadDetalle.prioridad === 'Alta' ? 'CANCELADA' : novedadDetalle.prioridad === 'Media' ? 'PENDIENTE' : 'CONFIRMADA'">{{ novedadDetalle.prioridad }}</span>
+              </div>
+            </div>
+            <div style="margin-top:16px;">
+              <span class="detail-label">Asunto:</span>
+              <h3 style="margin-top:4px;">{{ novedadDetalle.asunto }}</h3>
+            </div>
+            <div style="margin-top:12px;">
+              <span class="detail-label">Tipo:</span>
+              <span class="status-badge" style="background:#e0e7ff; color:#3730a3;">{{ novedadDetalle.tipo }}</span>
+            </div>
+            <div v-if="novedadDetalle.descripcion" class="res-notes" style="margin-top:16px;">
+              <strong>Descripción:</strong> {{ novedadDetalle.descripcion }}
+            </div>
+            <div v-if="novedadDetalle.imagen_preview" style="margin-top:16px;">
+              <span class="detail-label">Imagen adjunta:</span>
+              <img :src="novedadDetalle.imagen_preview" style="max-width:100%; margin-top:8px; border-radius:8px; border:1px solid var(--border);" alt="Imagen novedad">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" @click="closeNovedadDetalle">Cerrar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL: AGREGAR BRIEFING -->
+      <div v-if="showBriefingForm" class="modal-backdrop" @click.self="showBriefingForm = false">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>📝 Agregar Briefing — {{ currentRestaurant.nombre }}</h3>
+            <button class="modal-close-btn" @click="showBriefingForm = false">×</button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label style="font-size:1rem; font-weight:700; color:var(--accent);">86 (No hay)</label>
+              <textarea class="form-control" rows="3" placeholder="Escribe lo que no hay disponible..." v-model="formBriefing.no_hay"></textarea>
+            </div>
+            <div class="form-group">
+              <label style="font-size:1rem; font-weight:700; color:#b45309;">85 (Está por acabarse)</label>
+              <textarea class="form-control" rows="3" placeholder="Escribe lo que está por acabarse..." v-model="formBriefing.por_acabarse"></textarea>
+            </div>
+            <div class="form-group">
+              <label style="font-size:1rem; font-weight:700; color:var(--accent-green);">Impulsar</label>
+              <textarea class="form-control" rows="3" placeholder="Escribe lo que se debe impulsar..." v-model="formBriefing.impulsar"></textarea>
+            </div>
+            <div class="form-group">
+              <label style="font-size:1rem; font-weight:700; color:var(--accent-blue);">Organización Servicio</label>
+              <textarea class="form-control" rows="3" placeholder="Escribe la organización del servicio..." v-model="formBriefing.organizacion_servicio"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" @click="showBriefingForm = false">Cancelar</button>
+            <button class="btn btn-primary" @click="saveBriefing">Guardar Briefing</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL: VER BRIEFING -->
+      <div v-if="showBriefingDetalle && briefingDetalle" class="modal-backdrop" @click.self="closeBriefingDetalle">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>📝 Briefing — {{ briefingDetalle.fecha }}</h3>
+            <button class="modal-close-btn" @click="closeBriefingDetalle">×</button>
+          </div>
+          <div class="modal-body">
+            <div style="margin-bottom:20px;">
+              <h4 style="color:var(--accent); margin-bottom:8px;">🔴 86 (No hay)</h4>
+              <div class="res-notes" style="border-left-color:var(--accent);">{{ briefingDetalle.no_hay || 'Sin información' }}</div>
+            </div>
+            <div style="margin-bottom:20px;">
+              <h4 style="color:#b45309; margin-bottom:8px;">🟡 85 (Está por acabarse)</h4>
+              <div class="res-notes" style="border-left-color:#f59e0b;">{{ briefingDetalle.por_acabarse || 'Sin información' }}</div>
+            </div>
+            <div style="margin-bottom:20px;">
+              <h4 style="color:var(--accent-green); margin-bottom:8px;">🟢 Impulsar</h4>
+              <div class="res-notes" style="border-left-color:var(--accent-green);">{{ briefingDetalle.impulsar || 'Sin información' }}</div>
+            </div>
+            <div>
+              <h4 style="color:var(--accent-blue); margin-bottom:8px;">🔵 Organización Servicio</h4>
+              <div class="res-notes" style="border-left-color:var(--accent-blue);">{{ briefingDetalle.organizacion_servicio || 'Sin información' }}</div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" @click="closeBriefingDetalle">Cerrar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notificaciones Toast -->
+      <div class="toast-container" v-if="toastVisible">
+        <div class="toast">
+          <span>{{ toastMessage }}</span>
+        </div>
+      </div>
+
+    </template>
+    <!-- fin isLoggedIn -->
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,1172 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reservar — Formulario</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #c59b27;
+      --primary-dark: #9e7916;
+      --primary-light: #fef8e7;
+      --secondary: #1a2238;
+      --bg: #f5f7fb;
+      --white: #ffffff;
+      --text: #2d3748;
+      --muted: #718096;
+      --border: #e2e8f0;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --shadow: 0 4px 20px rgba(0,0,0,0.08);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,0.14);
+      --green: #27ae60;
+      --red: #e74c3c;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      background: var(--secondary);
+      padding: 14px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+    }
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .topbar-logo {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+    .topbar h1 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .topbar p {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.55);
+    }
+    .btn-back {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.75);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-back:hover {
+      background: rgba(255,255,255,0.18);
+      color: #fff;
+    }
+
+    /* ── STEPS BAR ── */
+    .steps-bar {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 14px 30px;
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+    .step {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.8rem; font-weight: 600;
+      color: var(--muted);
+    }
+    .step.active { color: var(--secondary); }
+    .step.done { color: var(--green); }
+    .step-num {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.72rem; font-weight: 700;
+    }
+    .step.active .step-num { background: var(--primary); color: #fff; }
+    .step.done .step-num { background: var(--green); color: #fff; font-size: 0.9rem; }
+    .step-line { width: 40px; height: 2px; background: var(--border); margin: 0 10px; }
+
+    /* ── LAYOUT ── */
+    .page-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 36px 24px 80px;
+    }
+
+    /* ── RESTAURANT HEADER ── */
+    .rest-header-card {
+      background: var(--secondary);
+      border-radius: var(--radius-lg);
+      padding: 28px 30px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+    .rest-header-card::after {
+      content: '';
+      position: absolute;
+      right: -30px; top: -30px;
+      width: 180px; height: 180px;
+      border-radius: 50%;
+      background: rgba(197,155,39,0.08);
+    }
+    .rest-logo-box {
+      width: 70px; height: 70px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.5rem;
+      flex-shrink: 0;
+      border: 2px solid rgba(197,155,39,0.3);
+    }
+    .rest-logo-box img { width: 100%; height: 100%; object-fit: cover; }
+    .rest-header-info { flex: 1; }
+    .rest-header-info h2 {
+      font-size: 1.5rem; font-weight: 800;
+      color: #fff; margin-bottom: 6px;
+    }
+    .rest-header-info p { color: rgba(255,255,255,0.6); font-size: 0.85rem; }
+    .rest-header-meta {
+      display: flex; gap: 16px; margin-top: 12px; flex-wrap: wrap;
+    }
+    .rest-header-meta span {
+      font-size: 0.78rem; color: rgba(255,255,255,0.55);
+      display: flex; align-items: center; gap: 5px;
+    }
+
+    /* ── CARTA SECTION ── */
+    .section-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+    .section-header {
+      padding: 18px 24px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-header-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: var(--primary-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+    }
+    .section-header h3 {
+      font-size: 1rem; font-weight: 700; color: var(--secondary);
+    }
+    .section-header p {
+      font-size: 0.78rem; color: var(--muted);
+    }
+
+    /* ── CARTA DISPLAY ── */
+    .carta-viewer {
+      padding: 0;
+    }
+    .carta-pdf-frame {
+      width: 100%;
+      height: 550px;
+      border: none;
+      display: block;
+    }
+    .carta-no-pdf {
+      padding: 50px 24px;
+      text-align: center;
+      color: var(--muted);
+    }
+    .carta-no-pdf .icon { font-size: 3rem; margin-bottom: 12px; }
+    .carta-no-pdf p { font-size: 0.88rem; }
+
+    /* ── MENSAJE ADMIN ── */
+    .admin-message-box {
+      background: linear-gradient(135deg, #fef8e7, #fffdf5);
+      border: 1px solid rgba(197,155,39,0.3);
+      border-left: 5px solid var(--primary);
+      border-radius: var(--radius-md);
+      padding: 20px 22px;
+    }
+    .admin-message-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .admin-message-text {
+      font-size: 0.92rem;
+      color: #5a4a1e;
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+
+    /* ── FORM ── */
+    .form-section { padding: 24px; }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--secondary);
+    }
+    .form-group label span { color: var(--red); margin-left: 2px; }
+    .form-control {
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 11px 14px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      color: var(--text);
+      background: #fff;
+      transition: all 0.2s;
+      width: 100%;
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(197,155,39,0.12);
+    }
+    textarea.form-control { resize: vertical; min-height: 90px; }
+    select.form-control { cursor: pointer; }
+
+    /* Switch */
+    .switch-row {
+      display: flex; align-items: center; justify-content: space-between;
+      background: #f8fafc;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      margin-bottom: 16px;
+      cursor: pointer;
+    }
+    .switch-label { font-size: 0.88rem; font-weight: 600; color: var(--secondary); }
+    .switch-desc { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+    .switch {
+      position: relative; width: 44px; height: 24px; flex-shrink: 0;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute; inset: 0;
+      background: #cbd5e0; border-radius: 24px; cursor: pointer;
+      transition: 0.3s;
+    }
+    .slider:before {
+      content: '';
+      position: absolute;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      left: 3px; top: 3px;
+      transition: 0.3s;
+    }
+    .switch input:checked + .slider { background: var(--primary); }
+    .switch input:checked + .slider:before { transform: translateX(20px); }
+
+    /* ── COMPROBANTE UPLOADER ── */
+    .upload-area {
+      border: 2.5px dashed var(--border);
+      border-radius: var(--radius-md);
+      padding: 30px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s;
+      background: #fafafa;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .upload-area:hover, .upload-area.dragover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+    .upload-area input[type="file"] {
+      position: absolute; inset: 0;
+      opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+    .upload-icon { font-size: 2.5rem; margin-bottom: 10px; }
+    .upload-title { font-size: 0.92rem; font-weight: 700; color: var(--secondary); margin-bottom: 4px; }
+    .upload-sub { font-size: 0.78rem; color: var(--muted); }
+
+    .upload-preview {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: #f0fdf4;
+      border: 1.5px solid #86efac;
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      margin-bottom: 16px;
+    }
+    .upload-preview img {
+      width: 60px; height: 60px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .upload-preview .file-icon { font-size: 2rem; }
+    .upload-preview-info { flex: 1; }
+    .upload-preview-name { font-size: 0.85rem; font-weight: 600; color: #065f46; }
+    .upload-preview-size { font-size: 0.75rem; color: #047857; }
+    .btn-remove {
+      background: none; border: none; cursor: pointer;
+      color: #dc2626; font-size: 1.1rem; padding: 4px;
+    }
+
+    /* ── BOTONES ACCIÓN ── */
+    .actions-bar {
+      display: flex;
+      gap: 14px;
+      justify-content: flex-end;
+      padding: 20px 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 13px 28px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all 0.22s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary {
+      background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(197,155,39,0.3);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(90deg, #d4a933, var(--primary));
+      box-shadow: 0 6px 20px rgba(197,155,39,0.45);
+      transform: translateY(-1px);
+    }
+    .btn-primary:disabled {
+      opacity: 0.6; cursor: not-allowed; transform: none;
+    }
+    .btn-secondary {
+      background: #f1f5f9;
+      color: var(--secondary);
+      border: 1.5px solid var(--border);
+    }
+    .btn-secondary:hover { background: #e2e8f0; }
+
+    /* ── SUCCESS SCREEN ── */
+    .success-screen {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      padding: 50px 36px;
+      text-align: center;
+      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .success-icon {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.5rem;
+      margin: 0 auto 24px;
+      box-shadow: 0 8px 24px rgba(39,174,96,0.25);
+    }
+    .success-screen h2 {
+      font-size: 1.7rem; font-weight: 800; color: var(--secondary);
+      margin-bottom: 10px;
+    }
+    .success-screen p {
+      color: var(--muted); font-size: 0.95rem;
+      line-height: 1.7; max-width: 450px; margin: 0 auto 28px;
+    }
+
+    .reservation-summary {
+      background: #f8fafc;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 22px;
+      text-align: left;
+      margin-bottom: 28px;
+    }
+    .summary-title {
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 500px) { .summary-grid { grid-template-columns: 1fr; } }
+    .summary-item label {
+      display: block;
+      font-size: 0.72rem; font-weight: 600;
+      color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px;
+      margin-bottom: 3px;
+    }
+    .summary-item span {
+      font-size: 0.92rem; font-weight: 700; color: var(--secondary);
+    }
+
+    .btn-download {
+      background: linear-gradient(90deg, var(--secondary), #2c3652);
+      color: #fff;
+      padding: 14px 32px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.22s;
+      box-shadow: 0 4px 16px rgba(26,34,56,0.2);
+      margin-bottom: 14px;
+    }
+    .btn-download:hover {
+      background: linear-gradient(90deg, #2c3652, var(--secondary));
+      box-shadow: 0 8px 24px rgba(26,34,56,0.3);
+      transform: translateY(-1px);
+    }
+
+    /* ── LOADING ── */
+    .spinner {
+      width: 20px; height: 20px;
+      border: 2.5px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 30px; right: 30px;
+      background: var(--secondary);
+      color: #fff;
+      padding: 14px 22px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 9999;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { background: #065f46; }
+    .toast.error { background: #991b1b; }
+
+    /* ── FORM VALIDATION ── */
+    .form-control.invalid { border-color: var(--red); }
+    .field-error { font-size: 0.75rem; color: var(--red); margin-top: 2px; }
+    .form-group.has-error label { color: var(--red); }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.85); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-logo">🍽️</div>
+      <div>
+        <h1>RestoGest</h1>
+        <p>Sistema de Reservas</p>
+      </div>
+    </div>
+    <a class="btn-back" href="reservar.html">← Volver a restaurantes</a>
+  </header>
+
+  <!-- STEPS -->
+  <div class="steps-bar">
+    <div class="step done">
+      <div class="step-num">✓</div>
+      <span>Elegiste restaurante</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step active">
+      <div class="step-num">2</div>
+      <span>Ver carta y reservar</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step" id="step3">
+      <div class="step-num">3</div>
+      <span>Confirmar y descargar</span>
+    </div>
+  </div>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <div class="page-content">
+
+    <!-- PANTALLA PRINCIPAL (form) -->
+    <div id="mainContent">
+
+      <!-- HEADER DEL RESTAURANTE -->
+      <div class="rest-header-card" id="restHeaderCard">
+        <div class="rest-logo-box" id="restLogoBox">🍽️</div>
+        <div class="rest-header-info">
+          <h2 id="restName">Cargando...</h2>
+          <p id="restDesc"></p>
+          <div class="rest-header-meta" id="restMeta"></div>
+        </div>
+      </div>
+
+      <!-- CARTA DEL RESTAURANTE -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-header-icon">📋</div>
+          <div>
+            <h3>Nuestra Carta</h3>
+            <p>Consulta nuestros platos y menús disponibles</p>
+          </div>
+        </div>
+        <div class="carta-viewer" id="cartaViewer">
+          <!-- filled by JS -->
+        </div>
+      </div>
+
+      <!-- MENSAJE DEL ADMINISTRADOR -->
+      <div class="section-card" id="adminMsgSection">
+        <div class="section-header">
+          <div class="section-header-icon">📢</div>
+          <div>
+            <h3>Información importante</h3>
+            <p>Mensaje del restaurante para sus clientes</p>
+          </div>
+        </div>
+        <div style="padding: 20px 24px;">
+          <div class="admin-message-box">
+            <div class="admin-message-label">📌 Aviso del restaurante</div>
+            <div class="admin-message-text" id="adminMessageText">
+              Cargando mensaje...
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORMULARIO DE RESERVA -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-header-icon">📅</div>
+          <div>
+            <h3>Formulario de Reserva</h3>
+            <p>Completa los datos para apartar tu mesa</p>
+          </div>
+        </div>
+
+        <div class="form-section">
+
+          <!-- Fecha y Hora -->
+          <div class="form-row">
+            <div class="form-group" id="fg-fecha">
+              <label>Fecha de Reserva <span>*</span></label>
+              <input type="date" class="form-control" id="inp-fecha">
+            </div>
+            <div class="form-group" id="fg-hora">
+              <label>Hora <span>*</span></label>
+              <input type="time" class="form-control" id="inp-hora" value="14:00">
+            </div>
+          </div>
+
+          <!-- Nombre y Personas -->
+          <div class="form-row">
+            <div class="form-group" id="fg-nombre">
+              <label>Nombre Completo <span>*</span></label>
+              <input type="text" class="form-control" id="inp-nombre" placeholder="Ej: Juan Pérez">
+            </div>
+            <div class="form-group" id="fg-personas">
+              <label>Número de Personas <span>*</span></label>
+              <input type="number" class="form-control" id="inp-personas" min="1" max="50" value="2">
+            </div>
+          </div>
+
+          <!-- Teléfono (SIN email) -->
+          <div class="form-row">
+            <div class="form-group" id="fg-tel">
+              <label>Teléfono de Contacto <span>*</span> <small style="font-weight:400;color:var(--muted)">(solo números, máx. 10)</small></label>
+              <input type="tel" class="form-control" id="inp-tel" placeholder="3001234567" maxlength="10">
+            </div>
+            <div class="form-group" id="fg-ocasion">
+              <label>Ocasión</label>
+              <select class="form-control" id="inp-ocasion">
+                <option value="OTRO">Sin ocasión especial</option>
+                <option value="CUMPLEAÑOS">🎂 Cumpleaños</option>
+                <option value="ANIVERSARIO">💑 Aniversario</option>
+                <option value="CITA_ROMANTICA">❤️ Cita Romántica</option>
+                <option value="REUNION_FAMILIAR">👨‍👩‍👧 Reunión Familiar</option>
+                <option value="REUNION_NEGOCIOS">💼 Reunión de Negocios</option>
+                <option value="GRADUACION">🎓 Graduación</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Plan -->
+          <div class="form-group" style="margin-bottom:16px;" id="fg-plan">
+            <label>Plan de Reserva</label>
+            <select class="form-control" id="inp-plan">
+              <option value="No aplica">Sin plan especial</option>
+              <option value="30">Plan 30</option>
+              <option value="50">Plan 50</option>
+              <option value="60">Plan 60</option>
+              <option value="70">Plan 70</option>
+              <option value="80">Plan 80</option>
+            </select>
+          </div>
+
+          <!-- Postre Switch -->
+          <label class="switch-row" for="inp-postre">
+            <div>
+              <div class="switch-label">¿Deseas incluir postre en la reserva?</div>
+              <div class="switch-desc">Activa si deseas que se incluya postre para todos los comensales</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="inp-postre">
+              <span class="slider"></span>
+            </label>
+          </label>
+
+          <!-- Notas -->
+          <div class="form-group" id="fg-notas">
+            <label>Peticiones especiales / Notas</label>
+            <textarea class="form-control" id="inp-notas" rows="3" placeholder="Ej: Mesa decorada, alergias, silla para bebé..."></textarea>
+          </div>
+
+          <!-- COMPROBANTE DE PAGO -->
+          <div style="margin-top: 24px; padding-top: 20px; border-top: 1.5px dashed var(--border);">
+            <div class="form-group" style="margin-bottom: 8px;">
+              <label style="font-size:0.9rem; font-weight:700; color:var(--secondary);">
+                📎 Comprobante de Pago <span style="color:var(--red)">*</span>
+              </label>
+              <p style="font-size:0.78rem;color:var(--muted);margin-top:2px;">
+                Sube una imagen o PDF de tu comprobante de pago o depósito para confirmar tu reserva.
+              </p>
+            </div>
+
+            <!-- Preview -->
+            <div id="comprobantePreview" style="display:none;" class="upload-preview">
+              <div id="comprobanteThumbnail"></div>
+              <div class="upload-preview-info">
+                <div class="upload-preview-name" id="comprobanteFileName">—</div>
+                <div class="upload-preview-size" id="comprobanteFileSize">—</div>
+              </div>
+              <button class="btn-remove" onclick="removeComprobante()" title="Quitar archivo">🗑️</button>
+            </div>
+
+            <!-- Drop zone -->
+            <div class="upload-area" id="uploadArea">
+              <input type="file" id="inp-comprobante" accept="image/*,application/pdf"
+                onchange="handleComprobanteChange(event)">
+              <div class="upload-icon">📤</div>
+              <div class="upload-title">Arrastra aquí tu comprobante o haz clic</div>
+              <div class="upload-sub">PNG, JPG, PDF — Máx. 5 MB</div>
+            </div>
+          </div>
+
+        </div><!-- /form-section -->
+
+        <!-- ACCIONES -->
+        <div class="actions-bar">
+          <button class="btn btn-secondary" onclick="window.location.href='reservar.html'">
+            Cancelar
+          </button>
+          <button class="btn btn-primary" id="btnConfirmar" onclick="confirmarReserva()">
+            <span>✅ Confirmar Reserva</span>
+          </button>
+        </div>
+      </div><!-- /section-card form -->
+
+    </div><!-- /mainContent -->
+
+    <!-- PANTALLA DE ÉXITO -->
+    <div id="successScreen" style="display:none;">
+      <div class="success-screen">
+        <div class="success-icon">✅</div>
+        <h2>¡Reserva Confirmada!</h2>
+        <p>Tu reserva ha sido registrada exitosamente. Guarda los detalles de tu reserva para presentarlos el día de tu visita.</p>
+
+        <div class="reservation-summary">
+          <div class="summary-title">🧾 Resumen de tu Reserva</div>
+          <div class="summary-grid" id="summaryGrid">
+            <!-- filled by JS -->
+          </div>
+        </div>
+
+        <button class="btn-download" onclick="downloadReserva()">
+          ⬇️ Descargar Comprobante de Reserva
+        </button>
+        <br>
+        <button class="btn btn-secondary" onclick="window.location.href='reservar.html'" style="display:inline-flex; margin:0 auto;">
+          ← Hacer otra reserva
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /page-content -->
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <script src="js/api.js"></script>
+  <script>
+  // ============================================================
+  // ESTADO GLOBAL
+  // ============================================================
+  const params       = new URLSearchParams(window.location.search);
+  const restauranteId = params.get('restaurante') || '';
+  let restaurante    = null;
+  let comprobanteFile = null;
+  let comprobanteDataURL = null;
+  let confirmedReserva = null;
+
+  // ============================================================
+  // INIT
+  // ============================================================
+  (function init() {
+    if (!restauranteId) {
+      window.location.href = 'reservar.html';
+      return;
+    }
+
+    const todos = DataService.getRestaurantes();
+    restaurante = todos.find(r => r.id === restauranteId);
+    if (!restaurante) {
+      window.location.href = 'reservar.html';
+      return;
+    }
+
+    renderRestaurantHeader();
+    renderCarta();
+    renderAdminMessage();
+    setMinDate();
+    setupUploadDragDrop();
+  })();
+
+  // ── HEADER DEL RESTAURANTE
+  function renderRestaurantHeader() {
+    const logos = JSON.parse(localStorage.getItem('app_restaurant_logos_v1') || '{}');
+    const logo  = logos[restauranteId];
+
+    const logoBox = document.getElementById('restLogoBox');
+    if (logo) {
+      logoBox.innerHTML = `<img src="${logo}" alt="${restaurante.nombre}">`;
+    } else {
+      const emojis = {
+        '11111111-1111-1111-1111-111111111111': '🍝',
+        '22222222-2222-2222-2222-222222222222': '🌸',
+        '33333333-3333-3333-3333-333333333333': '🌮',
+        '44444444-4444-4444-4444-444444444444': '🫕'
+      };
+      logoBox.textContent = emojis[restauranteId] || '🍽️';
+    }
+
+    document.getElementById('restName').textContent = restaurante.nombre;
+    document.getElementById('restDesc').textContent = restaurante.descripcion || '';
+
+    const meta = document.getElementById('restMeta');
+    meta.innerHTML = `
+      <span>📍 ${restaurante.direccion || ''}</span>
+      <span>📞 ${restaurante.telefono || ''}</span>
+      <span>🕐 ${fmt12h(restaurante.hora_apertura)} – ${fmt12h(restaurante.hora_cierre)}</span>
+    `;
+  }
+
+  // ── CARTA PDF
+  function renderCarta() {
+    const cartas = JSON.parse(localStorage.getItem('app_restaurant_cartas_v1') || '{}');
+    const carta  = cartas[restauranteId];
+    const viewer = document.getElementById('cartaViewer');
+
+    if (carta) {
+      viewer.innerHTML = `<iframe class="carta-pdf-frame" src="${carta}" title="Carta ${restaurante.nombre}"></iframe>`;
+    } else {
+      viewer.innerHTML = `
+        <div class="carta-no-pdf">
+          <div class="icon">📋</div>
+          <p>La carta de este restaurante aún no ha sido cargada.<br>
+             Puedes consultar el menú directamente en el restaurante o por teléfono.</p>
+        </div>`;
+    }
+  }
+
+  // ── MENSAJE DEL ADMIN
+  function renderAdminMessage() {
+    const msgs = JSON.parse(localStorage.getItem('app_admin_messages_v1') || '{}');
+    const msg  = msgs[restauranteId] ||
+      'Para confirmar tu reserva, realiza tu pago por transferencia o depósito y adjunta el comprobante en este formulario.\n\nTe contactaremos a tu número de teléfono para confirmar tu mesa.\n\n¡Gracias por elegirnos!';
+
+    document.getElementById('adminMessageText').textContent = msg;
+  }
+
+  // ── FECHA MÍNIMA = HOY
+  function setMinDate() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('inp-fecha').min = today;
+    document.getElementById('inp-fecha').value = today;
+  }
+
+  // ── DRAG & DROP UPLOAD
+  function setupUploadDragDrop() {
+    const area = document.getElementById('uploadArea');
+    area.addEventListener('dragover', e => { e.preventDefault(); area.classList.add('dragover'); });
+    area.addEventListener('dragleave', () => area.classList.remove('dragover'));
+    area.addEventListener('drop', e => {
+      e.preventDefault();
+      area.classList.remove('dragover');
+      if (e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]);
+    });
+  }
+
+  // ── COMPROBANTE CHANGE
+  function handleComprobanteChange(e) {
+    const file = e.target.files[0];
+    if (file) processFile(file);
+  }
+
+  function processFile(file) {
+    if (file.size > 5 * 1024 * 1024) {
+      showToast('El archivo supera el límite de 5 MB', 'error');
+      return;
+    }
+    comprobanteFile = file;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      comprobanteDataURL = e.target.result;
+      showComprobantePreview(file);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function showComprobantePreview(file) {
+    document.getElementById('uploadArea').style.display = 'none';
+    document.getElementById('comprobantePreview').style.display = 'flex';
+    document.getElementById('comprobanteFileName').textContent = file.name;
+    document.getElementById('comprobanteFileSize').textContent = formatBytes(file.size);
+
+    const thumb = document.getElementById('comprobanteThumbnail');
+    if (file.type.startsWith('image/')) {
+      thumb.innerHTML = `<img src="${comprobanteDataURL}" alt="comprobante">`;
+    } else {
+      thumb.innerHTML = `<span class="file-icon">📄</span>`;
+    }
+  }
+
+  function removeComprobante() {
+    comprobanteFile = null;
+    comprobanteDataURL = null;
+    document.getElementById('comprobantePreview').style.display = 'none';
+    document.getElementById('uploadArea').style.display = 'block';
+    document.getElementById('inp-comprobante').value = '';
+  }
+
+  // ── TELÉFONO: solo números
+  document.getElementById('inp-tel').addEventListener('input', function() {
+    this.value = this.value.replace(/\D/g, '').slice(0, 10);
+  });
+
+  // ── VALIDAR
+  function validate() {
+    let ok = true;
+    const fields = [
+      { id: 'fg-fecha',   inp: 'inp-fecha',   msg: 'Selecciona la fecha' },
+      { id: 'fg-hora',    inp: 'inp-hora',    msg: 'Selecciona la hora' },
+      { id: 'fg-nombre',  inp: 'inp-nombre',  msg: 'Ingresa tu nombre completo' },
+      { id: 'fg-personas',inp: 'inp-personas', msg: 'Ingresa el número de personas' },
+      { id: 'fg-tel',     inp: 'inp-tel',     msg: 'Ingresa el teléfono (10 dígitos)', minLen: 7 }
+    ];
+
+    fields.forEach(f => {
+      const el = document.getElementById(f.inp);
+      const fg = document.getElementById(f.id);
+      clearErr(f.id);
+      let val = el.value.trim();
+      if (!val || (f.minLen && val.length < f.minLen)) {
+        showFieldErr(f.id, f.msg);
+        ok = false;
+      }
+    });
+
+    if (!comprobanteFile) {
+      showToast('⚠️ Por favor adjunta el comprobante de pago', 'error');
+      document.getElementById('uploadArea').style.borderColor = 'var(--red)';
+      ok = false;
+    }
+
+    return ok;
+  }
+
+  function showFieldErr(groupId, msg) {
+    const fg = document.getElementById(groupId);
+    if (!fg) return;
+    fg.classList.add('has-error');
+    const inp = fg.querySelector('.form-control');
+    if (inp) inp.classList.add('invalid');
+    let err = fg.querySelector('.field-error');
+    if (!err) { err = document.createElement('span'); err.className = 'field-error'; fg.appendChild(err); }
+    err.textContent = msg;
+  }
+
+  function clearErr(groupId) {
+    const fg = document.getElementById(groupId);
+    if (!fg) return;
+    fg.classList.remove('has-error');
+    const inp = fg.querySelector('.form-control');
+    if (inp) inp.classList.remove('invalid');
+    const err = fg.querySelector('.field-error');
+    if (err) err.remove();
+  }
+
+  // ── CONFIRMAR RESERVA
+  function confirmarReserva() {
+    if (!validate()) return;
+
+    const btn = document.getElementById('btnConfirmar');
+    btn.disabled = true;
+    btn.innerHTML = `<div class="spinner"></div> Guardando...`;
+
+    const ocasionLabels = {
+      'OTRO': 'Sin ocasión especial',
+      'CUMPLEAÑOS': 'Cumpleaños',
+      'ANIVERSARIO': 'Aniversario',
+      'CITA_ROMANTICA': 'Cita Romántica',
+      'REUNION_FAMILIAR': 'Reunión Familiar',
+      'REUNION_NEGOCIOS': 'Reunión de Negocios',
+      'GRADUACION': 'Graduación'
+    };
+
+    const planVal = document.getElementById('inp-plan').value;
+    const reserva = {
+      id: 'res-' + Date.now(),
+      restaurante_id: restauranteId,
+      restaurante_nombre: restaurante.nombre,
+      fecha: document.getElementById('inp-fecha').value,
+      hora: document.getElementById('inp-hora').value,
+      nombre_cliente: document.getElementById('inp-nombre').value.trim(),
+      numero_personas: parseInt(document.getElementById('inp-personas').value) || 1,
+      telefono_contacto: document.getElementById('inp-tel').value.trim(),
+      ocasion: document.getElementById('inp-ocasion').value,
+      ocasion_label: ocasionLabels[document.getElementById('inp-ocasion').value] || 'Otro',
+      plan: planVal,
+      postre_incluido: document.getElementById('inp-postre').checked,
+      descripcion_notas: document.getElementById('inp-notas').value.trim(),
+      estado: 'PENDIENTE',
+      comprobante_nombre: comprobanteFile ? comprobanteFile.name : null,
+      comprobante_datos: comprobanteDataURL,
+      creado_por: 'Cliente (Público)',
+      ultimo_editor: 'Cliente (Público)',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+
+    // Guardar en localStorage
+    setTimeout(() => {
+      DataService.saveReserva(reserva);
+      confirmedReserva = reserva;
+      showSuccessScreen(reserva);
+      btn.disabled = false;
+      btn.innerHTML = `<span>✅ Confirmar Reserva</span>`;
+    }, 900);
+  }
+
+  // ── MOSTRAR ÉXITO
+  function showSuccessScreen(r) {
+    document.getElementById('mainContent').style.display = 'none';
+    const ss = document.getElementById('successScreen');
+    ss.style.display = 'block';
+
+    // Marcar paso 3
+    const s3 = document.getElementById('step3');
+    if (s3) { s3.className = 'step active'; s3.querySelector('.step-num').textContent = '3'; }
+
+    const grid = document.getElementById('summaryGrid');
+    grid.innerHTML = `
+      <div class="summary-item"><label>Restaurante</label><span>${r.restaurante_nombre}</span></div>
+      <div class="summary-item"><label>Fecha</label><span>${formatDate(r.fecha)}</span></div>
+      <div class="summary-item"><label>Hora</label><span>${fmt12h(r.hora)}</span></div>
+      <div class="summary-item"><label>Personas</label><span>${r.numero_personas}</span></div>
+      <div class="summary-item"><label>Nombre</label><span>${r.nombre_cliente}</span></div>
+      <div class="summary-item"><label>Teléfono</label><span>${r.telefono_contacto}</span></div>
+      <div class="summary-item"><label>Ocasión</label><span>${r.ocasion_label}</span></div>
+      <div class="summary-item"><label>Plan</label><span>Plan ${r.plan}</span></div>
+      <div class="summary-item"><label>Postre</label><span>${r.postre_incluido ? '✅ Incluido' : '❌ No incluido'}</span></div>
+      <div class="summary-item"><label>Estado</label><span>🟡 PENDIENTE</span></div>
+      ${r.descripcion_notas ? `<div class="summary-item" style="grid-column:1/-1;"><label>Notas</label><span>${r.descripcion_notas}</span></div>` : ''}
+    `;
+
+    showToast('¡Reserva registrada con éxito! 🎉', 'success');
+  }
+
+  // ── DESCARGAR COMPROBANTE (HTML → print/PDF)
+  function downloadReserva() {
+    var r = confirmedReserva;
+    if (!r) return;
+
+    var imgHtml = "";
+    if (comprobanteDataURL && comprobanteFile && comprobanteFile.type.startsWith("image/")) {
+      imgHtml = "<img src=""" + comprobanteDataURL + """ style=""max-width:100%;border-radius:10px;margin-top:16px;"" alt=""comprobante"">";
+    } else if (comprobanteDataURL) {
+      imgHtml = "<p style=""color:#065f46;background:#d1fae5;padding:10px;border-radius:8px;"">PDF adjunto: " + r.comprobante_nombre + "</p>";
+    }
+
+    var notasHtml = r.descripcion_notas
+      ? "<div class=""notas"" style=""margin-top:16px;""><label>Peticiones / Notas</label><p style=""font-size:0.88rem"">" + r.descripcion_notas + "</p></div>"
+      : "";
+
+    var css = [
+      "body{font-family:Segoe UI,sans-serif;background:#f5f7fb;padding:40px 20px;color:#2d3748}",
+      ".card{background:#fff;max-width:680px;margin:0 auto;border-radius:16px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.1)}",
+      ".card-header{background:linear-gradient(135deg,#1a2238,#2c3652);color:#fff;padding:30px 32px}",
+      ".card-header h1{font-size:1.6rem;font-weight:800;margin-bottom:4px}",
+      ".card-header p{color:rgba(255,255,255,.6);font-size:.88rem}",
+      ".card-body{padding:30px 32px}",
+      ".rest-name{font-size:1.3rem;font-weight:800;color:#c59b27;margin-bottom:20px}",
+      ".grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}",
+      ".item label{display:block;font-size:.72rem;font-weight:700;text-transform:uppercase;color:#718096;letter-spacing:.5px;margin-bottom:3px}",
+      ".item span{font-size:.95rem;font-weight:700;color:#2d3748}",
+      ".notas{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:10px;padding:14px;margin-top:20px}",
+      ".notas label{display:block;font-size:.72rem;text-transform:uppercase;color:#718096;margin-bottom:6px;font-weight:700}",
+      ".badge{display:inline-block;padding:4px 12px;border-radius:9999px;font-size:.78rem;font-weight:700;background:#fef8e7;color:#9e7916}",
+      ".divider{height:1px;background:#e2e8f0;margin:20px 0}",
+      ".footer{text-align:center;font-size:.75rem;color:#718096;padding:16px 32px;border-top:1px solid #e2e8f0}",
+      ".status-pendiente{background:#fef9c3;color:#854d0e;padding:6px 14px;border-radius:9999px;font-size:.82rem;font-weight:700;display:inline-block}",
+      "@media print{body{padding:0}.card{box-shadow:none;border-radius:0}}"
+    ].join("");
+
+    var html = "<!DOCTYPE html>"
+      + "<html lang=""es""><head><meta charset=""UTF-8"">"
+      + "<title>Reserva - " + r.restaurante_nombre + "</title>"
+      + "<style>" + css + "</style>"
+      + "</head><body>"
+      + "<div class=""card"">"
+        + "<div class=""card-header"">"
+          + "<h1>&#127869; RestoGest &mdash; Comprobante de Reserva</h1>"
+          + "<p>C&oacute;digo: #" + r.id + " &nbsp;|&nbsp; " + new Date(r.created_at).toLocaleString("es-MX") + "</p>"
+        + "</div>"
+        + "<div class=""card-body"">"
+          + "<div class=""rest-name"">" + r.restaurante_nombre + "</div>"
+          + "<div class=""grid"">"
+            + "<div class=""item""><label>Fecha</label><span>" + formatDate(r.fecha) + "</span></div>"
+            + "<div class=""item""><label>Hora</label><span>" + fmt12h(r.hora) + "</span></div>"
+            + "<div class=""item""><label>Nombre</label><span>" + r.nombre_cliente + "</span></div>"
+            + "<div class=""item""><label>Personas</label><span>" + r.numero_personas + "</span></div>"
+            + "<div class=""item""><label>Tel&eacute;fono</label><span>" + r.telefono_contacto + "</span></div>"
+            + "<div class=""item""><label>Ocasi&oacute;n</label><span>" + r.ocasion_label + "</span></div>"
+            + "<div class=""item""><label>Plan</label><span><span class=""badge"">Plan " + r.plan + "</span></span></div>"
+            + "<div class=""item""><label>Postre</label><span>" + (r.postre_incluido ? "&#9989; Incluido" : "No incluido") + "</span></div>"
+          + "</div>"
+          + "<div class=""divider""></div>"
+          + "<p>Estado: <span class=""status-pendiente"">&#9203; PENDIENTE DE CONFIRMACI&Oacute;N</span></p>"
+          + notasHtml
+          + "<div class=""divider""></div>"
+          + "<p style=""font-size:.82rem;color:#718096;""><strong>Comprobante de pago adjunto:</strong> " + (r.comprobante_nombre || "No adjuntado") + "</p>"
+          + imgHtml
+        + "</div>"
+        + "<div class=""footer"">Presentar este documento el d&iacute;a de la reserva &nbsp;&bull;&nbsp; RestoGest &copy; 2026</div>"
+      + "</div>"
+      + "</body></html>";
+
+    var blob = new Blob([html], { type: "text/html" });
+    var url  = URL.createObjectURL(blob);
+    var a    = document.createElement("a");
+    a.href = url;
+    a.download = "Reserva_" + r.restaurante_nombre.replace(/\s/g, "_") + "_" + r.fecha + ".html";
+    a.click();
+    URL.revokeObjectURL(url);
+
+    showToast("Archivo descargado", "success");
+  }
+  // ============================================================
+  // UTILIDADES
+  // ============================================================
+  function fmt12h(t) {
+    if (!t) return '—';
+    const [hh, mm] = t.split(':');
+    const hr = parseInt(hh);
+    return `${hr % 12 || 12}:${mm} ${hr >= 12 ? 'pm' : 'am'}`;
+  }
+
+  function formatDate(d) {
+    if (!d) return '—';
+    const [y, m, day] = d.split('-');
+    const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    return `${parseInt(day)} de ${months[parseInt(m)-1]} de ${y}`;
+  }
+
+  function formatBytes(b) {
+    if (b < 1024) return b + ' B';
+    if (b < 1048576) return (b/1024).toFixed(1) + ' KB';
+    return (b/1048576).toFixed(1) + ' MB';
+  }
+
+  function showToast(msg, type='') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast ' + type;
+    void t.offsetWidth;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3500);
+  }
+  </script>
+</body>
+</html>
